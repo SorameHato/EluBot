@@ -30,8 +30,13 @@ async def on_application_command_error(ctx, error):
     embed.add_field(name="보낸 분",value=ctx.author,inline=False)
     embed.add_field(name="보낸 내용",value=ctx.message,inline=False)
     embed.set_footer(text=f'에루봇 버전 {ver}')
+    embed.set_footer(url='https://i.ibb.co/7KNJZh4/lapis10-mp4-snapshot-08-40-2023-05-26-01-52-32.png')
     await ctx.respond('아무래도 바보토끼가 또 바보토끼 한 것 같아요. 하토를 불러주세요!',embed=embed)
     raise error
+
+#https://i.ibb.co/Nx1V0Fx/1652970799386-Ljqi-DW3-Kc-X.webp : 에루 구속구
+#https://i.ibb.co/XzmQjXD/img20220810-15093746-2.png : 에루 같이놀아주라
+
 
 def load_extensions():
     for filename in os.listdir('Cogs'):
