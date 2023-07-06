@@ -158,10 +158,59 @@ def __getData__(sql_cur, uid:int, data_name:str):
     '''
     friendly_point 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
-    sql_cur.execute(f'SELECT {data_name} FROM friendly_point where uid={uid})
-    return sql_cur.fetchall()[0][0]
 
 def __setData__(sql_cur, uid:int, data_name:str, amount):
+    if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_point'] and type(uid) is int:
+        sql_cur.execute(f'SELECT {data_name} FROM friendly_point where uid={uid})
+        return sql_cur.fetchall()[0][0]
+
+def __dataCheck__(uid, data_name, amount, funcInfo)
+    '''데이터가 잘못된 부분이 없는 지 확인하는 코드
+    funcInfo는 해당 코드가 add인지 set인지 / add나 set이 아니라면 Exception
+    dataList는 해당 명령어에서 처리할 수 있는 attribute의 목록
+    잘못된 부분이 있으면 Exception을 raise하고 False를 반환
+    잘못된 부분이 없으면 True를 반환
+    dataList
+    add : ['command_count', 'day_count', 'total_penalty', 'friendly_point']
+    set : ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_point']
+    
+    '''
+    if funcInfo is 'add':
+        dataList = ['command_count', 'day_count', 'total_penalty', 'friendly_point']
+    elif funcInfo is 'set':
+        dataList = ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_point']
+    else:
+        raise Exception(f'dataCheck 함수에서 코드 종류가 잘못 지정되었습니다. add 또는 set이 지정되어야 하는데 {funcInfo}가 지정되었습니다.')
+    
+    try:
+        # dataList의 이름 체크
+        if data_name is not in dataList:
+            raise Exception(f'__addData__에 지정된 attribute 이름이 잘못되었습니다. 지정된 attribute 이름은 {data_name}입니다.')
+        # uid가 int인지 체크
+        if type(uid) is not int:
+            raise ValueError(f'uid의 타입이 잘못되었습니다. uid는 int형이여야 합니다. uid의 타입 : {type(uid)}')
+        # data_name이 각 형식 별 형식에 맞는지 체크
+        # total_penalty, friendly_point : int형이나 Decimal형
+        # gunba : bool형
+        # last_call : dt형
+        # 그 외(command_count, day_count) : int형
+        if data_name is in ['total_penalty','friendly_point']:
+            if type(amount) is not int and type(amount) is not Decimal:
+                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형 또는 Decimal형이여야 합니다. amount의 타입 : {type(amount)}')
+        elif data_name is 'gunba':
+            if type(amount) is not bool:
+                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 bool형이여야 합니다. amount의 타입 : {type(amount)}')
+        elif data_time is 'last_call':
+            if type(amount) is not dt:
+                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 datetime형이여야 합니다. amount의 타입 : {type(amount)}')
+        else:
+            if type(amount) is not int:
+                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형이여야 합니다. amount의 타입 : {type(amount)}')
+    except as exceptA:
+        raise exceptA
+        return false
+    else:
+        return true
     '''
     데이터 수동 수정 용으로 만든 함수임!
     절대로 함수 안에서 사용하지 말 것!
