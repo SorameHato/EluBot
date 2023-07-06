@@ -139,13 +139,16 @@ def __createDB__(sql_con,sql_cur):
     이 함수는 수동으로만 사용되어야 하는 함수!
     에루봇을 처음 가동하기 전이나 DB 파일을 날려먹었을 때 등
     테이블이 전부 날라가거나 생성되지 않은 상황에서만 사용
+    day_count가 기본값이 1인 이유는 register을 할 때 last_call이
+    현재 시간으로 기록되기 때문에 따로 처리를 안 해주면 day_count가
+    0부터 시작하기 때문! 첫째 날도 빼먹으면 안 되니까
     '''
     sql_cur.execute('''CREATE TABLE IF NOT EXISTS friendly_point (
     uid INTEGER UNIQUE PRIMARY KEY,
     last_call TEXT,
     gunba BLOB DEFAULT 0,
     command_count INTEGER DEFAULT 0,
-    day_count INTEGER DEFAULT 0,
+    day_count INTEGER DEFAULT 1,
     total_penalty REAL DEFAULT 0,
     friendly_point REAL DEFAULT 0);''')
     __logWrite__('-','생성','테이블 생성 완료')
