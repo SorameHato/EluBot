@@ -254,3 +254,7 @@ def getPenalty(uid:int):
 def getLastCallDate(uid:int):
     return __getDataFromOutside__(uid, 'last_call')
     #str형으로 반환, 내부에서 작업할 때는 %Y-%m-%d %H:%M:%S.%f 형식으로 datetime형으로 변환해야 함
+
+def getFriendlyPoint(uid:int):
+    return __getDataFromOutside__(uid, 'friendly_point')
+
