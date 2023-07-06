@@ -2,11 +2,11 @@ import sqlite3, csv
 from datetime import datetime as dt
 from decimal import getcontext, Decimal
 getcontext().prec = 2
-commandPoint = Decimal(0.15)
-dayPoint = Decimal(2.85)
-threeDayPenalty = Decimal(-3.00)
-sevenDayPenaltyInitial = Decimal(-14.00)
-sevenDayPenaltyPerDay = Decimal(-2.00)
+commandPoint = Decimal('0.15')
+dayPoint = Decimal('2.85')
+threeDayPenalty = Decimal('3')
+sevenDayPenaltyInitial = Decimal('2')
+sevenDayPenaltyPerDay = Decimal('14')
 
 '''
 에루짱의 친밀도 정리
