@@ -258,3 +258,12 @@ def getLastCallDate(uid:int):
 def getFriendlyPoint(uid:int):
     return __getDataFromOutside__(uid, 'friendly_point')
 
+def __updateLastCallDate__(sql_cur, uid:int, date:dt):
+    pass
+
+def __calcFriendlyPoint__(sql_cur, uid:int):
+    pass
+
+def commandCallCalc(uid:int, date:dt):
+    sql_con, sql_cur = __connectDB__()
+    pass
