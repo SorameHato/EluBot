@@ -154,4 +154,27 @@ def __createDB__(sql_con,sql_cur):
     __logWrite__('-','생성','테이블 생성 완료')
     __commit__(sql_con,True)
 
-    
+def __getData__(sql_cur, uid:int, data_name:str):
+    '''
+    friendly_point 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
+    '''
+    sql_cur.execute(f'SELECT {data_name} FROM friendly_point where uid={uid})
+    return sql_cur.fetchall()[0][0]
+
+def __setData__(sql_cur, uid:int, data_name:str, amount):
+    '''
+    데이터 수동 수정 용으로 만든 함수임!
+    절대로 함수 안에서 사용하지 말 것!
+    friendly_point 테이블에서 uid에 대한 data_name의 값을
+    amount로 설정하는 함수
+    '''
+    sql_cur.execute(f'UPDATE friendly_point SET {data_name}={amount} WHERE uid={uid}')
+
+def __addData__(sql_cur, uid:int, data_name:str, amount):
+    '''
+    friendly_point 테이블에서 uid에 대한 data_name의 값을
+    amount만큼 바꾸는 함수
+    amount가 음수라도 정상적으로 작동한다!
+    '''
+    sql_cur.execute(f'UPDATE friendly_point SET {data_name}(SELECT {data_name} FROM friendly_point WHERE uid={uid})+{amount} WHERE uid={uid}')
+
