@@ -158,8 +158,6 @@ def __getData__(sql_cur, uid:int, data_name:str):
     '''
     friendly_point 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
-
-def __setData__(sql_cur, uid:int, data_name:str, amount):
     if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_point'] and type(uid) is int:
         sql_cur.execute(f'SELECT {data_name} FROM friendly_point where uid={uid})
         return sql_cur.fetchall()[0][0]
@@ -211,21 +209,30 @@ def __dataCheck__(uid, data_name, amount, funcInfo)
         return false
     else:
         return true
+
+def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     데이터 수동 수정 용으로 만든 함수임!
-    절대로 함수 안에서 사용하지 말 것!
+    군바나 last_call, friendly_point 설정하는 경우가 아니라면 절대로 함수 안에서 사용하지 말 것!
     friendly_point 테이블에서 uid에 대한 data_name의 값을
     amount로 설정하는 함수
     '''
-    sql_cur.execute(f'UPDATE friendly_point SET {data_name}={amount} WHERE uid={uid}')
+    if __dataCheck__(uid, data_name, amount, 'set'):
+        sql_cur.execute(f'UPDATE friendly_point SET {data_name}={amount} WHERE uid={uid}')
+        if sep:
+            __calcFriendlyPoint__(uid):
 
-def __addData__(sql_cur, uid:int, data_name:str, amount):
+def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     friendly_point 테이블에서 uid에 대한 data_name의 값을
     amount만큼 바꾸는 함수
     amount가 음수라도 정상적으로 작동한다!
+    기존 add~ 함수 어짜피 내부에서만 쓰이니까 전부 합쳐버림
     '''
-    sql_cur.execute(f'UPDATE friendly_point SET {data_name}(SELECT {data_name} FROM friendly_point WHERE uid={uid})+{amount} WHERE uid={uid}')
+    if __dataCheck__(uid, data_name, amount, 'add'):
+        sql_cur.execute(f'UPDATE friendly_point SET {data_name}(SELECT {data_name} FROM friendly_point WHERE uid={uid})+{amount} WHERE uid={uid}')
+        if sep:
+            __calcFriendlyPoint__(uid):
 
 def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
