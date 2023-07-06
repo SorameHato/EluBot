@@ -1,10 +1,12 @@
-import sqlite3
-conn = sqlite3.connect("..\친밀도.db")
+import sqlite3, csv
 from datetime import datetime as dt
 from decimal import getcontext, Decimal
 getcontext().prec = 2
 commandPoint = Decimal(0.15)
 dayPoint = Decimal(2.85)
+threeDayPenalty = Decimal(-3.00)
+sevenDayPenaltyInitial = Decimal(-14.00)
+sevenDayPenaltyPerDay = Decimal(-2.00)
 
 '''
 에루짱의 친밀도 정리
@@ -91,5 +93,44 @@ friendly_point를 얻은 후 Decimal형으로 return
 누적 패널티 : FriendlyPoint.getPenalty(uid),inline=True
 '''
 
+def __connectDB__():
+    '''
+    DB에 연결한 다음 con과 cur을 return하는 함수
+    이 함수를 쓸 때에는 conn, cur = __connectDB__() 처럼
+    앞에 변수를 2개 줘서 써야 한다!
+    '''
+    sql_con = sqlite3.connect("..\친밀도.db")
+    sql_cur = sql_con.cursor()
+    return sql_con, sql_cur
+
+def __logWrite__(uid,task:str,text:str):
+    '''
+    로그에 데이터를 기록하는 함수
+    현재시간(dt형),uid,task,text 와 같은 형식의 csv로 저장된다.
+    uid : 말 그대로 유저의 디스코드 아이디
+    task : 작업명 또는 함수명 (변경, 커밋, 생성, 조회 등)
+    text : 상세한 작업 내역 (친밀도 1024.50 (1130,300,0) → 1027.50 (1131,301,0) 변경 처럼 어떤 걸 어떻게 변경했는 지 등을 상세하게 기록)
+    '''
+    with open('log.csv','a',encoding='utf-8',newline='') as a:
+        writer = csv.writer(a)
+        writer.writerow([dt.now(),uid,task,text])
+
+def __commit__(sql_con,closeCon=False):
+    '''
+    데이터를 커밋하고 로그에 커밋했다는 사실을 기록하는 함수
+    덤으로 closeCon = True로 하면 연결도 끊어준다
+    '''
+    sql_con.commit()
+    __logWrite__('-','커밋','커밋 완료')
+    if closeCon:
+        __closeCon__(sql_con)
+
+def __closeCon__(sql_con)
+    '''
+    조회함수 같은 건 커밋을 할 필요가 없으니까
+    closeCon을 단독으로 사용하기
+    '''
+    sql_con.close()
+    __logWrite__('-','closeCon','DB 연결 종료')
 
     
