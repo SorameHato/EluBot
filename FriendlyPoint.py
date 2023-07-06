@@ -192,7 +192,7 @@ def getDayCount(uid:int):
     __closeCon__(sql_con)
     return day_count
 
-def getPenalty(uid:Decimal):
+def getPenalty(uid:int):
     sql_con, sql_cur = __connectDB__()
     total_penalty = __getData__(sql_cur,'total_penalty',uid)
     __logWrite__(uid,'조회',f'total_penalty={total_penalty}')
