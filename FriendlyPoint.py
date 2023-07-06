@@ -1,7 +1,7 @@
 import sqlite3, csv
 from datetime import datetime as dt
 from decimal import getcontext, Decimal
-getcontext().prec = 2
+getcontext().prec = 3
 commandPoint = Decimal('0.15')
 dayPoint = Decimal('2.85')
 threeDayPenalty = Decimal('3')
