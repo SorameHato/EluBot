@@ -31,7 +31,7 @@ main.py에서 슬래시커맨드를 사용하면 정보나 랭크 커맨드 같�
 getCommandCount(uid:int)
 command_count를 얻은 후 int형으로 return
 
-__addCommamdCount__(uid:int,count:int,sep=False)
+__addCommandCount__(uid:int,count:int,sep=False)
 command_count를 count만큼 올리고 단독 사용 여부(sep)가 True라면 __calcFriendlyPoint__ 호출
 만약 내리고 싶으면 count에 음수 입력
 
@@ -96,7 +96,7 @@ friendly_point를 얻은 후 Decimal형으로 return
 def __connectDB__():
     '''
     DB에 연결한 다음 con과 cur을 return하는 함수
-    이 함수를 쓸 때에는 conn, cur = __connectDB__() 처럼
+    이 함수를 쓸 때에는 sql_con, sql_cur = __connectDB__() 처럼
     앞에 변수를 2개 줘서 써야 한다!
     '''
     sql_con = sqlite3.connect("..\친밀도.db")
