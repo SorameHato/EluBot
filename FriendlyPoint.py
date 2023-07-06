@@ -178,3 +178,25 @@ def __addData__(sql_cur, uid:int, data_name:str, amount):
     '''
     sql_cur.execute(f'UPDATE friendly_point SET {data_name}(SELECT {data_name} FROM friendly_point WHERE uid={uid})+{amount} WHERE uid={uid}')
 
+def getCommandCount(uid:int):
+    sql_con, sql_cur = __connectDB__()
+    command_count = __getData__(sql_cur,'command_count',uid)
+    __logWrite__(uid,'조회',f'command_count={command_count}')
+    __closeCon__(sql_con)
+    return command_count
+
+def getDayCount(uid:int):
+    sql_con, sql_cur = __connectDB__()
+    day_count = __getData__(sql_cur,'day_count',uid)
+    __logWrite__(uid,'조회',f'day_count={day_count}')
+    __closeCon__(sql_con)
+    return day_count
+
+def getPenalty(uid:Decimal):
+    sql_con, sql_cur = __connectDB__()
+    total_penalty = __getData__(sql_cur,'total_penalty',uid)
+    __logWrite__(uid,'조회',f'total_penalty={total_penalty}')
+    __closeCon__(sql_con)
+    return total_penalty
+
+def 
