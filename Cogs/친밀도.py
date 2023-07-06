@@ -4,7 +4,7 @@ from discord.ext import commands
 global guild_ids
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from main import guild_ids
-from FriendlyPoint import 
+from FriendlyRate import 
 
 '''친밀도와 관련된 작업을 하는 프론트엔드
 정보 명령어도 여기에 있고 다른 파일에서 쓰일 친밀함 여부를 정하는 것도 이 파일
