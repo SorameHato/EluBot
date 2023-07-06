@@ -133,4 +133,22 @@ def __closeCon__(sql_con)
     sql_con.close()
     __logWrite__('-','closeCon','DB 연결 종료')
 
+
+def __createDB__(sql_con,sql_cur):
+    '''
+    이 함수는 수동으로만 사용되어야 하는 함수!
+    에루봇을 처음 가동하기 전이나 DB 파일을 날려먹었을 때 등
+    테이블이 전부 날라가거나 생성되지 않은 상황에서만 사용
+    '''
+    sql_cur.execute('''CREATE TABLE IF NOT EXISTS friendly_point (
+    uid INTEGER UNIQUE PRIMARY KEY,
+    last_call TEXT,
+    gunba BLOB DEFAULT 0,
+    command_count INTEGER DEFAULT 0,
+    day_count INTEGER DEFAULT 0,
+    total_penalty REAL DEFAULT 0,
+    friendly_point REAL DEFAULT 0);''')
+    __logWrite__('-','생성','테이블 생성 완료')
+    __commit__(sql_con,True)
+
     
