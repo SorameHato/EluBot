@@ -353,3 +353,10 @@ def commandCallCalc(uid:int, date:dt):
     __commit__(sql_con,True)
     return friendlyRateArg, lastCallArg
 
+if __name__ == '__main__':
+    print('업무를 선택해주세요.')
+    print('1. 조회')
+    print('2. 수정')
+    print('3. 설정')
+    arg = int(input('번호 입력 : '))
+    print('이런! 아직 전부 구현이 안 되어있네요. 하토님, 얼른 일 하셔야죠?')
