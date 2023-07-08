@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 elu_session
 token.txt
+log.csv
