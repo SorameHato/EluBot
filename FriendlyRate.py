@@ -221,8 +221,8 @@ def __dataCheck__(uid, data_name, amount, funcInfo):
         # last_call : dt형
         # 그 외(command_count, day_count) : int형
         if data_name in ['total_penalty','friendly_rate']:
-            if type(amount) is not int and type(amount) is not Decimal:
-                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형 또는 Decimal형이여야 합니다. amount의 타입 : {type(amount)}')
+            if type(amount) is not int and type(amount) is not float:
+                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형 또는 float형이여야 합니다. amount의 타입 : {type(amount)}')
         elif data_name == 'gunba':
             if type(amount) != bool:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 bool형이여야 합니다. amount의 타입 : {type(amount)}')
@@ -356,7 +356,7 @@ def __calcFriendlyRate__(sql_cur, uid:int):
     total_penalty = Decimal(str(__getData__(sql_cur, uid, 'total_penalty')))
     friendly_rate = command_count * commandPoint + day_count * dayPoint - total_penalty
     __logWrite__(uid, '친밀도 계산', f'friendly_rate = {friendly_rate}')
-    __setData__(sql_cur, uid, 'friendly_rate', friendly_rate)
+    __setData__(sql_cur, uid, 'friendly_rate', float(friendly_rate))
     return friendly_rate
 
 def commandCallCalc(uid:int, date:dt):
