@@ -9,7 +9,8 @@ from SkyLib import tui
 bot = discord.Bot()
 elu_ver = "0.0 rev 1 build 1 @ 20230704"
 guild_ids = [
-    1030056186915082262 #테스트용 서버
+    1030056186915082262, #테스트용 서버
+    1126790936723210290 #스카이형 서버
     ]
 bot.elu_ver = elu_ver
 
