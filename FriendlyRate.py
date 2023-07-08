@@ -1,6 +1,6 @@
 import sqlite3, csv
 from datetime import datetime as dt
-from datetime import timedelta as dt
+from datetime import timedelta as td
 from datetime import date, time
 from decimal import getcontext, Decimal
 getcontext().prec = 3
@@ -375,16 +375,16 @@ if __name__ == '__main__':
         uid = input('조회할 유저의 uid를 입력해주세요. 만약 모든 유저의 데이터를 조회하시려면 그냥 엔터를 쳐 주세요. : ')
     elif arg == 2:
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
-        data_name = input('설정할 attribute를 입력해주세요. : '))
-        amount = input('설정할 값을 입력해주세요. : '))
+        data_name = input('설정할 attribute를 입력해주세요. : ')
+        amount = input('설정할 값을 입력해주세요. : ')
         sql_con, sql_cur = __connectDB__()
         __setData__(sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
         print('설정 작업이 완료되었습니다. 데이터가 반영되었는지는 조회 메뉴에서 조회해주세요.')
     elif arg == 3:
         uid = int(input('변경할 유저의 uid를 입력해주세요. : '))
-        data_name = input('변경할 attribute를 입력해주세요. : '))
-        amount = input('얼만큼 변경할 지 값을 입력해주세요. (값을 늘리려면 양수, 값을 줄이려면 음수) : '))
+        data_name = input('변경할 attribute를 입력해주세요. : ')
+        amount = input('얼만큼 변경할 지 값을 입력해주세요. (값을 늘리려면 양수, 값을 줄이려면 음수) : ')
         sql_con, sql_cur = __connectDB__()
         __setData__(sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
