@@ -311,6 +311,7 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
     '''
     #In [46]: dt.strptime('2023-05-01 12:34:56.789','%Y-%m-%d %H:%M:%S.%f')
     #Out[46]: datetime.datetime(2023, 5, 1, 12, 34, 56, 789000)
+    __logWrite__(uid,'날짜 계산','해당 유저의 날짜계산 요청 접수')
     last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f')
     now = dt.now()
     __setData__(sql_cur,uid,'last_call',now)
@@ -324,12 +325,15 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         #In [65]: last_call - todayStart
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
         restDay = abs((last_call - todayStart).days)
+        __logWrite__(uid,'commandCallCalc',f'오늘 첫 사용, 미접속일 : {restDay}일')
         if restday <= 2:
             returnArg = 1
         elif restday <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
                 __addData__(sql_cur,uid,'total_penalty',3)
+            else:
+                __logWrite__(uid,'commandCallCalc',f'해당 유저는 gunba가 True이므로 패널티를 부여하지 않았음')
             returnArg = 2
         else:
             __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
@@ -366,11 +370,13 @@ def commandCallCalc(uid:int, date:dt):
     friendlyRateArg : 변경된 친밀도
     lastCallArg : __updateLastCallDate__의 주석 참고
     '''
+    __logWrite__(uid,'commandCallCalc','해당 유저의 commandCallCalc 요청 접수')
     sql_con, sql_cur = __connectDB__()
     __addData__(sql_cur, uid, 'command_count', 1)
     lastCallArg = __updateLastCallDate__(sql_cur, uid, date)
     friendlyRateArg = __calcFriendlyRate__(sql_cur, uid)
     __commit__(sql_con,True)
+    __logWrite__(uid,'commandCallCalc',f'해당 유저의 commandCallCalc 요청 처리 완료 | lastCallArg는 {lastCallArg}')
     return friendlyRateArg, lastCallArg
 
 if __name__ == '__main__':
