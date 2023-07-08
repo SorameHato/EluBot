@@ -156,14 +156,17 @@ def __createDB__(sql_con,sql_cur):
     __logWrite__('-','생성','테이블 생성 완료')
     __commit__(sql_con,True)
 
-def __getData__(sql_cur, uid:int, data_name:str):
+def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     '''
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
     if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
         sql_cur.execute(f'SELECT {data_name} FROM friendly_rate where uid={uid})
         result = sql_cur.fetchall()[0][0]
-        __logWrite__(uid,'조회',f'{data_name}={result}')
+        if outside:
+            __logWrite__(uid,'조회(외부)',f'{data_name}={result}')
+        else:
+            __logWrite__(uid,'조회(내부)',f'{data_name}={result}')
         return result
 
 def __dataCheck__(uid, data_name, amount, funcInfo)
@@ -223,7 +226,7 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     if __dataCheck__(uid, data_name, amount, 'set'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}={amount} WHERE uid={uid}')
-        __logWrite__(uid,'set',f'{data_name} ─→ {amount}')
+        __logWrite__(uid,'Set(내부)',f'{data_name} ─→ {amount}')
         __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur,uid):
@@ -238,9 +241,9 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     if __dataCheck__(uid, data_name, amount, 'add'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}(SELECT {data_name} FROM friendly_rate WHERE uid={uid})+{amount} WHERE uid={uid}')
         if amount >= 0:
-            __logWrite__(uid,'add',f'{data_name} + {amount}')
+            __logWrite__(uid,'Add(내부)',f'{data_name} + {amount}')
         else:
-            __logWrite__(uid,'add',f'{data_name} - {abs(amount)}')
+            __logWrite__(uid,'Add(내부)',f'{data_name} - {abs(amount)}')
         __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur, uid):
