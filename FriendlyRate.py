@@ -270,14 +270,14 @@ def getDayCount(uid:int):
     return __getDataFromOutside__(uid, 'day_count')
 
 def getPenalty(uid:int):
-    return __getDataFromOutside__(uid, 'total_penalty')
+    return Decimal(str(__getDataFromOutside__(uid, 'total_penalty')))
 
 def getLastCallDate(uid:int):
     return __getDataFromOutside__(uid, 'last_call')
     #str형으로 반환, 내부에서 작업할 때는 %Y-%m-%d %H:%M:%S.%f 형식으로 datetime형으로 변환해야 함
 
 def getFriendlyRate(uid:int):
-    return __getDataFromOutside__(uid, 'friendly_rate')
+    return Decimal(str(__getDataFromOutside__(uid, 'friendly_rate')))
 
 def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
     #In [46]: dt.strptime('2023-05-01 12:34:56.789','%Y-%m-%d %H:%M:%S.%f')
