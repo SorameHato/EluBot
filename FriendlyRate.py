@@ -162,7 +162,9 @@ def __getData__(sql_cur, uid:int, data_name:str):
     '''
     if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
         sql_cur.execute(f'SELECT {data_name} FROM friendly_rate where uid={uid})
-        return sql_cur.fetchall()[0][0]
+        result = sql_cur.fetchall()[0][0]
+        __logWrite__(uid,'조회',f'{data_name}={result}')
+        return result
 
 def __dataCheck__(uid, data_name, amount, funcInfo)
     '''데이터가 잘못된 부분이 없는 지 확인하는 코드
@@ -221,6 +223,8 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     if __dataCheck__(uid, data_name, amount, 'set'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}={amount} WHERE uid={uid}')
+        __logWrite__(uid,'set',f'{data_name} ─→ {amount}')
+        __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur,uid):
 
@@ -233,6 +237,11 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     if __dataCheck__(uid, data_name, amount, 'add'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}(SELECT {data_name} FROM friendly_rate WHERE uid={uid})+{amount} WHERE uid={uid}')
+        if amount >= 0:
+            __logWrite__(uid,'add',f'{data_name} + {amount}')
+        else:
+            __logWrite__(uid,'add',f'{data_name} - {abs(amount)}')
+        __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur, uid):
 
@@ -240,7 +249,6 @@ def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
     sql_con, sql_cur = __connectDB__()
     result = __getData__(sql_cur,attribute,uid)
-    __logWrite__(uid,'조회',f'{attribute}={result}')
     __closeCon__(sql_con)
     return result
 
