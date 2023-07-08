@@ -213,9 +213,9 @@ def __dataCheck__(uid, data_name, amount, funcInfo)
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형이여야 합니다. amount의 타입 : {type(amount)}')
     except as exceptA:
         raise exceptA
-        return false
+        return False
     else:
-        return true
+        return True
 
 def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
