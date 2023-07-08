@@ -1,5 +1,7 @@
 import sqlite3, csv
 from datetime import datetime as dt
+from datetime import timedelta as dt
+from datetime import date, time
 from decimal import getcontext, Decimal
 getcontext().prec = 3
 commandPoint = Decimal('0.15')
@@ -258,8 +260,36 @@ def getLastCallDate(uid:int):
 def getFriendlyRate(uid:int):
     return __getDataFromOutside__(uid, 'friendly_rate')
 
-def __updateLastCallDate__(sql_cur, uid:int, date:dt):
-    pass
+def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
+    #In [46]: dt.strptime('2023-05-01 12:34:56.789','%Y-%m-%d %H:%M:%S.%f')
+    #Out[46]: datetime.datetime(2023, 5, 1, 12, 34, 56, 789000)
+    last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f')
+    now = dt.now()
+    __setData__(sql_cur,uid,'last_call',now)
+    if now.time() >= time(5,15):
+        todayStart = dt(now.year, now.month, now.day, 5, 15)
+    else:
+        todayStart = dt(now.year, now.month, now.day, 5, 15)-td(days=1)
+    if last_call < todayStart:
+        #왜 abs냐면 음수로 나와서
+        #In [64]: last_call = dt.strptime('2023-07-08 05:14:59.000','%Y-%m-%d %H:%M:%S.%f')
+        #In [65]: last_call - todayStart
+        #Out[65]: datetime.timedelta(days=-1, seconds=86399)
+        restDay = abs((last_call - todayStart).days)
+        if restday <= 2:
+        returnArg = 0
+        elif restday <= 7:
+            gunba = __getData__(sql_cur,uid,'gunba')
+            if not gunba:
+            __addData__(sql_cur,uid,'total_penalty',3)
+            returnArg = 1
+        else:
+            __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
+            returnArg = 2
+    if sep:
+            __calcFriendlyRate__(uid):
+    return returnArg
+        
 
 def __calcFriendlyRate__(sql_cur, uid:int):
     pass
