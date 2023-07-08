@@ -335,5 +335,21 @@ def __calcFriendlyRate__(sql_cur, uid:int):
     return friendly_rate
 
 def commandCallCalc(uid:int, date:dt):
+    '''
+    먼저 sql_con과 sql_cur을 얻고
+    command_count를 1 올리고
+    __updateLastCallDate__을 호출해서 날짜 관련 계산을 하고
+    __calcFriendlyRate__를 호출해서 친밀도를 계산한 다음
+    모든 것을 커밋하고 sql 연결을 닫고
+    친밀도와 lastCallArg을 리턴하는 함수
+    return값은 두 개! friendlyRateArg, lastCallArg = commandCallCalc(uid, dt) 이런 식으로 적어야 함
+    friendlyRateArg : 변경된 친밀도
+    lastCallArg : __updateLastCallDate__의 주석 참고
+    '''
     sql_con, sql_cur = __connectDB__()
-    pass
+    __addData__(sql_cur, uid, 'command_count', 1)
+    lastCallArg = __updateLastCallDate__(sql_cur, uid, date)
+    friendlyRateArg = __calcFriendlyRate__(sql_cur, uid)
+    __commit__(sql_con,True)
+    return friendlyRateArg, lastCallArg
+
