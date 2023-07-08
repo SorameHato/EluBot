@@ -354,9 +354,43 @@ def commandCallCalc(uid:int, date:dt):
     return friendlyRateArg, lastCallArg
 
 if __name__ == '__main__':
-    print('업무를 선택해주세요.')
-    print('1. 조회')
-    print('2. 수정')
-    print('3. 설정')
+    print('┌──────────────────────────┐')
+    print('│   업무를 선택해주세요.   │')
+    print('├───────────────┬──────────┤')
+    print('│ 봇 이름       │ 데이터명 │')
+    print('├───────────────┼──────────┤')
+    print('│ 에루봇        │  친밀도  │')
+    print('├───────────────┴──────────┤')
+    print('│ 번호                메뉴 │')
+    print('│ 1.           데이터 조회 │')
+    print('│ 2.           데이터 설정 │')
+    print('│ 3.           데이터 수정 │')
+    print('│ 4.           테이블 생성 │')
+    print('│ (9).         치르노(ﾊﾞｶ) │')
+    print('└──────────────────────────┘')
     arg = int(input('번호 입력 : '))
-    print('이런! 아직 전부 구현이 안 되어있네요. 하토님, 얼른 일 하셔야죠?')
+    if arg == 9:
+        print('BPM 999의 산수교실을 즐겨봐요!')
+    elif arg == 1:
+        uid = input('조회할 유저의 uid를 입력해주세요. 만약 모든 유저의 데이터를 조회하시려면 그냥 엔터를 쳐 주세요. : ')
+    elif arg == 2:
+        uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
+        data_name = input('설정할 attribute를 입력해주세요. : '))
+        amount = input('설정할 값을 입력해주세요. : '))
+        sql_con, sql_cur = __connectDB__()
+        __setData__(sql_cur, uid, data_name, amount, True)
+        __closeCon__(sql_con)
+        print('설정 작업이 완료되었습니다. 데이터가 반영되었는지는 조회 메뉴에서 조회해주세요.')
+    elif arg == 3:
+        uid = int(input('변경할 유저의 uid를 입력해주세요. : '))
+        data_name = input('변경할 attribute를 입력해주세요. : '))
+        amount = input('얼만큼 변경할 지 값을 입력해주세요. (값을 늘리려면 양수, 값을 줄이려면 음수) : '))
+        sql_con, sql_cur = __connectDB__()
+        __setData__(sql_cur, uid, data_name, amount, True)
+        __closeCon__(sql_con)
+        print('변경 작업이 완료되었습니다. 데이터가 반영되었는지는 조회 메뉴에서 조회해주세요.')
+    elif arg == 4:
+        sql_con, sql_cur = __connectDB__()
+        __createDB__(sql_con,sql_cur)
+        print('테이블 생성이 완료되었습니다.')
+        
