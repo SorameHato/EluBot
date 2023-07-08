@@ -3,6 +3,7 @@ from datetime import datetime as dt
 from datetime import timedelta as td
 from datetime import date, time
 from decimal import getcontext, Decimal
+from SkyLib import tui
 getcontext().prec = 3
 commandPoint = Decimal('0.15')
 dayPoint = Decimal('2.85')
@@ -373,6 +374,19 @@ if __name__ == '__main__':
         print('BPM 999의 산수교실을 즐겨봐요!')
     elif arg == 1:
         uid = input('조회할 유저의 uid를 입력해주세요. 만약 모든 유저의 데이터를 조회하시려면 그냥 엔터를 쳐 주세요. : ')
+        sql_con, sql_cur = __connectDB__()
+        try:
+            uid = int(uid)
+        except:
+            uid = None
+            sql_cur.execute('SELECT * FROM friendly_rate')
+        else:
+            sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid',{'uid':uid})
+        finally:
+            print(tui.fixedWidth('uid',20)+tui.fixedWidth('마지막 호출 시간',24)+tui.fixedWidth('군바',6)+tui.fixedWidth('command',8,2),tui.fixedWidth('day',8,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
+            for row in sql_cur:
+                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],24)+tui.fixedWidth(row[2],6)+tui.fixedWidth(row[3],8,2),tui.fixedWidth(row[4],8,2),tui.fixedWidth('0:.2f'.format(row[5]),12,2),tui.fixedWidth('0:.2f'.format(row[6]),12,2))
+            
     elif arg == 2:
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
         data_name = input('설정할 attribute를 입력해주세요. : ')
