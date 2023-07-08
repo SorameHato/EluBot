@@ -222,7 +222,7 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     if __dataCheck__(uid, data_name, amount, 'set'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}={amount} WHERE uid={uid}')
         if sep:
-            __calcFriendlyRate__(uid):
+            __calcFriendlyRate__(sql_cur,uid):
 
 def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
@@ -234,7 +234,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     if __dataCheck__(uid, data_name, amount, 'add'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}(SELECT {data_name} FROM friendly_rate WHERE uid={uid})+{amount} WHERE uid={uid}')
         if sep:
-            __calcFriendlyRate__(uid):
+            __calcFriendlyRate__(sql_cur, uid):
 
 def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
@@ -287,7 +287,7 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
             __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
             returnArg = 2
     if sep:
-            __calcFriendlyRate__(uid):
+            __calcFriendlyRate__(sql_cur, uid):
     return returnArg
         
 
