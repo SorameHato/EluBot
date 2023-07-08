@@ -161,7 +161,7 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
     if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
-        sql_cur.execute(f'SELECT {data_name} FROM friendly_rate where uid={uid})
+        sql_cur.execute(f'SELECT {data_name} FROM friendly_rate where uid={uid}')
         result = sql_cur.fetchall()[0][0]
         if outside:
             __logWrite__(uid,'조회(외부)',f'{data_name}={result}')
