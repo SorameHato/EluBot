@@ -226,7 +226,11 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     if __dataCheck__(uid, data_name, amount, 'set'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}={amount} WHERE uid={uid}')
-        __logWrite__(uid,'Set(내부)',f'{data_name} ─→ {amount}')
+        if sep:
+            func = 'Set(내부 수동)'
+        else:
+            func = 'Set(내부 자동)'
+        __logWrite__(uid,func,f'{data_name} ─→ {amount}')
         __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur,uid):
@@ -240,10 +244,14 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     if __dataCheck__(uid, data_name, amount, 'add'):
         sql_cur.execute(f'UPDATE friendly_rate SET {data_name}(SELECT {data_name} FROM friendly_rate WHERE uid={uid})+{amount} WHERE uid={uid}')
-        if amount >= 0:
-            __logWrite__(uid,'Add(내부)',f'{data_name} + {amount}')
+        if sep:
+            func = 'Add(내부 수동)'
         else:
-            __logWrite__(uid,'Add(내부)',f'{data_name} - {abs(amount)}')
+            func = 'Add(내부 자동)'
+        if amount >= 0:
+            __logWrite__(uid,func,f'{data_name} + {amount}')
+        else:
+            __logWrite__(uid,func,f'{data_name} - {abs(amount)}')
         __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur, uid):
