@@ -127,7 +127,7 @@ def __commit__(sql_con,closeCon=False):
     if closeCon:
         __closeCon__(sql_con)
 
-def __closeCon__(sql_con)
+def __closeCon__(sql_con):
     '''
     조회함수 같은 건 커밋을 할 필요가 없으니까
     closeCon을 단독으로 사용하기
