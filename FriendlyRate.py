@@ -160,7 +160,7 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     '''
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
-    if data_name is in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
+    if data_name in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
         sql_cur.execute(f'SELECT {data_name} FROM friendly_rate where uid={uid}')
         result = sql_cur.fetchall()[0][0]
         if outside:
@@ -169,7 +169,7 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
             __logWrite__(uid,'조회(내부)',f'{data_name}={result}')
         return result
 
-def __dataCheck__(uid, data_name, amount, funcInfo)
+def __dataCheck__(uid, data_name, amount, funcInfo):
     '''데이터가 잘못된 부분이 없는 지 확인하는 코드
     funcInfo는 해당 코드가 add인지 set인지 / add나 set이 아니라면 Exception
     dataList는 해당 명령어에서 처리할 수 있는 attribute의 목록
@@ -180,38 +180,38 @@ def __dataCheck__(uid, data_name, amount, funcInfo)
     set : ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate']
     
     '''
-    if funcInfo is 'add':
+    if funcInfo == 'add':
         dataList = ['command_count', 'day_count', 'total_penalty', 'friendly_rate']
-    elif funcInfo is 'set':
+    elif funcInfo == 'set':
         dataList = ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate']
     else:
         raise Exception(f'dataCheck 함수에서 코드 종류가 잘못 지정되었습니다. add 또는 set이 지정되어야 하는데 {funcInfo}가 지정되었습니다.')
     
     try:
         # dataList의 이름 체크
-        if data_name is not in dataList:
+        if data_name not in dataList:
             raise Exception(f'__addData__에 지정된 attribute 이름이 잘못되었습니다. 지정된 attribute 이름은 {data_name}입니다.')
         # uid가 int인지 체크
-        if type(uid) is not int:
+        if type(uid) != int:
             raise ValueError(f'uid의 타입이 잘못되었습니다. uid는 int형이여야 합니다. uid의 타입 : {type(uid)}')
         # data_name이 각 형식 별 형식에 맞는지 체크
         # total_penalty, friendly_rate : int형이나 Decimal형
         # gunba : bool형
         # last_call : dt형
         # 그 외(command_count, day_count) : int형
-        if data_name is in ['total_penalty','friendly_rate']:
+        if data_name in ['total_penalty','friendly_rate']:
             if type(amount) is not int and type(amount) is not Decimal:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형 또는 Decimal형이여야 합니다. amount의 타입 : {type(amount)}')
-        elif data_name is 'gunba':
-            if type(amount) is not bool:
+        elif data_name == 'gunba':
+            if type(amount) != bool:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 bool형이여야 합니다. amount의 타입 : {type(amount)}')
-        elif data_time is 'last_call':
-            if type(amount) is not dt:
+        elif data_time == 'last_call':
+            if type(amount) != dt:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 datetime형이여야 합니다. amount의 타입 : {type(amount)}')
         else:
-            if type(amount) is not int:
+            if type(amount) != int:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형이여야 합니다. amount의 타입 : {type(amount)}')
-    except as exceptA:
+    except Exception as exceptA:
         raise exceptA
         return False
     else:
@@ -233,7 +233,7 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
         __logWrite__(uid,func,f'{data_name} ─→ {amount}')
         __commit__(sql_con)
         if sep:
-            __calcFriendlyRate__(sql_cur,uid):
+            __calcFriendlyRate__(sql_cur,uid)
 
 def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
@@ -254,7 +254,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
             __logWrite__(uid,func,f'{data_name} - {abs(amount)}')
         __commit__(sql_con)
         if sep:
-            __calcFriendlyRate__(sql_cur, uid):
+            __calcFriendlyRate__(sql_cur, uid)
 
 def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
@@ -305,11 +305,11 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
         restDay = abs((last_call - todayStart).days)
         if restday <= 2:
-        returnArg = 1
+            returnArg = 1
         elif restday <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
-            __addData__(sql_cur,uid,'total_penalty',3)
+                __addData__(sql_cur,uid,'total_penalty',3)
             returnArg = 2
         else:
             __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
@@ -317,7 +317,7 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
     else:
         returnArg = 0
     if sep:
-            __calcFriendlyRate__(sql_cur, uid):
+        __calcFriendlyRate__(sql_cur, uid)
     return returnArg
         
 
