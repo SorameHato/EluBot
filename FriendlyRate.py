@@ -280,6 +280,15 @@ def getFriendlyRate(uid:int):
     return Decimal(str(__getDataFromOutside__(uid, 'friendly_rate')))
 
 def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
+    '''
+    마지막으로 부른 날짜를 현재 시간으로 바꾸고 마지막 호출 시간이 오늘이 아니면 day_count를 1 올리고 접속을 며칠만에 했는지에 따라 그에 따른 처리를 하는 함수
+    return값은
+    0 : 날짜가 바뀌지 않았음
+    1 : 하루 또는 이틀
+    2 : 3~7일
+    3 : 8일 이상
+    이 return값을 받아서 적절한 대사를 보내야 함
+    '''
     #In [46]: dt.strptime('2023-05-01 12:34:56.789','%Y-%m-%d %H:%M:%S.%f')
     #Out[46]: datetime.datetime(2023, 5, 1, 12, 34, 56, 789000)
     last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f')
@@ -296,15 +305,17 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
         restDay = abs((last_call - todayStart).days)
         if restday <= 2:
-        returnArg = 0
+        returnArg = 1
         elif restday <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
             __addData__(sql_cur,uid,'total_penalty',3)
-            returnArg = 1
+            returnArg = 2
         else:
             __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
-            returnArg = 2
+            returnArg = 3
+    else:
+        returnArg = 0
     if sep:
             __calcFriendlyRate__(sql_cur, uid):
     return returnArg
