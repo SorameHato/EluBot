@@ -181,7 +181,7 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
     if data_name in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
-        sql_cur.execute('SELECT :dname FROM friendly_rate where uid=:uid',{'dname':data_name,'uid':uid})
+        sql_cur.execute('SELECT :dname FROM friendly_rate where uid=:uid;',{'dname':data_name,'uid':uid})
         result = sql_cur.fetchall()[0][0]
         if outside:
             __logWrite__(uid,'조회(외부)',f'{data_name}={result}')
@@ -245,7 +245,7 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     amount로 설정하는 함수
     '''
     if __dataCheck__(uid, data_name, amount, 'set'):
-        sql_cur.execute(f'UPDATE friendly_rate SET :dname=:amount WHERE uid=:uid',{'dname':data_name,'uid':uid,'amount':amount})
+        sql_cur.execute(f'UPDATE friendly_rate SET :dname=:amount WHERE uid=:uid;',{'dname':data_name,'uid':uid,'amount':amount})
         if sep:
             func = 'Set(내부 수동)'
         else:
@@ -263,7 +263,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     기존 add~ 함수 어짜피 내부에서만 쓰이니까 전부 합쳐버림
     '''
     if __dataCheck__(uid, data_name, amount, 'add'):
-        sql_cur.execute(f'UPDATE friendly_rate SET :dname(SELECT :dname FROM friendly_rate WHERE uid=:uid)+:amount WHERE uid=:uid',{'dname':data_name,'uid':uid,'amount':amount})
+        sql_cur.execute(f'UPDATE friendly_rate SET :dname(SELECT :dname FROM friendly_rate WHERE uid=:uid)+:amount WHERE uid=:uid;',{'dname':data_name,'uid':uid,'amount':amount})
         if sep:
             func = 'Add(내부 수동)'
         else:
@@ -397,10 +397,9 @@ if __name__ == '__main__':
         try:
             uid = int(uid)
         except:
-            uid = None
-            sql_cur.execute('SELECT * FROM friendly_rate')
+            sql_cur.execute('SELECT * FROM friendly_rate;')
         else:
-            sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid',{'uid':uid})
+            sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid;',{'uid':uid})
         finally:
             print(tui.fixedWidth('uid',20)+tui.fixedWidth('마지막 호출 시간',24)+tui.fixedWidth('군바',6)+tui.fixedWidth('command',8,2),tui.fixedWidth('day',8,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
             for row in sql_cur:
