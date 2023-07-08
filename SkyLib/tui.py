@@ -41,6 +41,8 @@ def fixedWidth(text:str,length:int,array:int=0):
     array : 3 (가운데 정렬) '  가나다라 ' (만약 글자수가 정확히 반으로 안 나누어 떨어지면 (2의 배수가 아니면) 오른쪽으로, 공백을 왼쪽이 더 많게)
     fullWidth를 적용하긴 조금 그렇고 각 열의 데이터의 글자수가 일정한 열 3개 이상의 표를 만들 때 유용
     만약 text의 길이가 length보다 길면 그냥 그 text 자체를 추가 공백 없이 return 함'''
+    # text가 str형이 아닌 경우를 대비하기 위한 전처리
+    text = str(text)
     # 먼저 text의 길이를 체크
     txtLen = __charLen__(text)
     # 그 다음 text의 길이가 length보다 긴지 아닌지 체크

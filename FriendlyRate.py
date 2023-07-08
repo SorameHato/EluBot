@@ -157,6 +157,25 @@ def __createDB__(sql_con,sql_cur):
     __logWrite__('-','생성','테이블 생성 완료')
     __commit__(sql_con,True)
 
+def register(uid:int):
+    '''
+    유저를 최초로 등록하는 함수
+    result : 등록 성공 1, 이미 데이터가 있음 -1
+    '''
+    sql_con, sql_cur = __connectDB__()
+    sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid;',{'uid':uid})
+    sql_data = sql_cur.fetchall()
+    if len(sql_data) == 0:
+        sql_cur.execute('INSERT INTO friendly_rate(uid, last_call) VALUES(:uid, :dt);',{'uid':uid,'dt':dt.now()})
+        __logWrite__(uid,'등록',f'해당 유저 초기등록 완료')
+        __commit__(sql_con,True)
+        return 1
+    else:
+        __logWrite__(uid,'등록',f'해당 유저는 이미 데이터가 있어서 등록하지 않았음')
+        __closeCon__(sql_con)
+        return -1
+    
+
 def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     '''
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
