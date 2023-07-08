@@ -280,7 +280,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
 def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
     sql_con, sql_cur = __connectDB__()
-    result = __getData__(sql_cur,attribute,uid,True)
+    result = __getData__(sql_cur,uid,attribute,True)
     __closeCon__(sql_con)
     return result
 

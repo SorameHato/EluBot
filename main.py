@@ -30,8 +30,8 @@ async def on_application_command_error(ctx, error):
     embed = discord.Embed(title='자세한 내용',description=error,color=0xfae5fa)
     embed.add_field(name="보낸 분",value=ctx.author,inline=False)
     embed.add_field(name="보낸 내용",value=ctx.message,inline=False)
-    embed.set_footer(text=f'에루봇 버전 {ver}')
-    embed.set_footer(url='https://i.ibb.co/7KNJZh4/lapis10-mp4-snapshot-08-40-2023-05-26-01-52-32.png')
+    embed.set_footer(text=f'에루봇 버전 {elu_ver}')
+    embed.set_image(url='https://i.ibb.co/7KNJZh4/lapis10-mp4-snapshot-08-40-2023-05-26-01-52-32.png')
     await ctx.respond('아무래도 바보토끼가 또 바보토끼 한 것 같아요. 하토를 불러주세요!',embed=embed)
     raise error
 
