@@ -392,7 +392,9 @@ if __name__ == '__main__':
     print('│ 2.           데이터 설정 │')
     print('│ 3.           데이터 수정 │')
     print('│ 4.           테이블 생성 │')
-    print('│ (9).         치르노(ﾊﾞｶ) │')
+    print('│ 5.             유저 등록 │')
+    print('│ 6.      호감도 수동 계산 │')
+    print('│ (9).        치르노(바보) │')
     print('└──────────────────────────┘')
     arg = int(input('번호 입력 : '))
     if arg == 9:
@@ -407,9 +409,11 @@ if __name__ == '__main__':
         else:
             sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid;',{'uid':uid})
         finally:
-            print(tui.fixedWidth('uid',20)+tui.fixedWidth('마지막 호출 시간',24)+tui.fixedWidth('군바',6)+tui.fixedWidth('command',8,2),tui.fixedWidth('day',8,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
-            for row in sql_cur:
-                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],24)+tui.fixedWidth(row[2],6)+tui.fixedWidth(row[3],8,2),tui.fixedWidth(row[4],8,2),tui.fixedWidth('0:.2f'.format(row[5]),12,2),tui.fixedWidth('0:.2f'.format(row[6]),12,2))
+            sql_data = sql_cur.fetchall()
+            print(f'데이터 개수 : {len(sql_data)}')
+            print(tui.fixedWidth('uid',20)+tui.fixedWidth('마지막 호출 시간',27)+tui.fixedWidth('군바',6)+tui.fixedWidth('command',8,2),tui.fixedWidth('day',8,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
+            for row in sql_data:
+                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],27)+tui.fixedWidth(row[2],6)+tui.fixedWidth(row[3],8,2),tui.fixedWidth(row[4],8,2),tui.fixedWidth(format(row[5],".2f"),12,2),tui.fixedWidth(format(row[6],".2f"),12,2))
             
     elif arg == 2:
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
@@ -431,4 +435,17 @@ if __name__ == '__main__':
         sql_con, sql_cur = __connectDB__()
         __createDB__(sql_con,sql_cur)
         print('테이블 생성이 완료되었습니다.')
-        
+    elif arg == 5:
+        uid = int(input('등록할 유저의 uid를 입력해주세요. : '))
+        ret = register(uid)
+        if ret == 1:
+            print(f'{uid} 유저의 데이터가 등록되었습니다.')
+        elif ret == -1:
+            print(f'{uid} 유저의 데이터가 이미 등록되어 있습니다.')
+        else:
+            print(f'{uid} 유저의 데이터를 등록하는 중 오류가 발생했습니다.')
+    elif arg == 6:
+        uid = int(input('계산할 유저의 uid를 입력해주세요. : '))
+        sql_con, sql_cur = __connectDB__()
+        friendly_rate = __calcFriendlyRate__(sql_cur, uid)
+        print(f'{uid} 유저의 친밀도가 다시 계산되어, {friendly_rate}로 바뀌었습니다.')
