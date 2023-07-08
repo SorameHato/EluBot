@@ -5,7 +5,7 @@ import asyncio
 from datetime import datetime as dt
 import os
 import sys
-from skylib import tui
+from SkyLib import tui
 bot = discord.Bot()
 elu_ver = "0.0 rev 1 build 1 @ 20230704"
 guild_ids = [
