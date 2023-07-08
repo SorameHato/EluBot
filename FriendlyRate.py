@@ -322,7 +322,17 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         
 
 def __calcFriendlyRate__(sql_cur, uid:int):
-    pass
+    '''
+    현재 기록된 command_count, day_count, total_penalty의 값을 기준으로 friendly_rate를 계산하고 올바른 값으로 갱신하는 함수
+    return값은 변경된 friendly_rate
+    '''
+    command_count = __getData__(sql_cur, uid, 'command_count')
+    day_count = __getData__(sql_cur, uid, 'day_count')
+    total_penalty = Decimal(str(__getData__(sql_cur, uid, 'total_penalty')))
+    friendly_rate = command_count * commandPoint + day_count * dayPoint - total_penalty
+    __logWrite__(uid, '친밀도 계산', f'friendly_rate = {friendly_rate}')
+    __setData__(sql_cur, uid, 'friendly_rate', friendly_rate)
+    return friendly_rate
 
 def commandCallCalc(uid:int, date:dt):
     sql_con, sql_cur = __connectDB__()
