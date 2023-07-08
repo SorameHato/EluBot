@@ -148,6 +148,7 @@ def __createDB__(sql_con,sql_cur):
     '''
     sql_cur.execute('''CREATE TABLE IF NOT EXISTS friendly_rate (
     uid INTEGER UNIQUE PRIMARY KEY,
+    first_call TEXT,
     last_call TEXT,
     gunba BLOB DEFAULT 0,
     command_count INTEGER DEFAULT 0,
@@ -166,7 +167,7 @@ def register(uid:int):
     sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid;',{'uid':uid})
     sql_data = sql_cur.fetchall()
     if len(sql_data) == 0:
-        sql_cur.execute('INSERT INTO friendly_rate(uid, last_call) VALUES(:uid, :dt);',{'uid':uid,'dt':dt.now()})
+        sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':dt.now()})
         __logWrite__(uid,'등록',f'해당 유저 초기등록 완료')
         __commit__(sql_con,True)
         return 1
@@ -180,7 +181,7 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
     '''
     friendly_rate 테이블에서 uid에 대한 data_name의 값을 가지고 오는 함수
     '''
-    if data_name in ['last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
+    if data_name in ['first_call', 'last_call', 'gunba', 'command_count', 'day_count', 'total_penalty', 'friendly_rate'] and type(uid) is int:
         sql_cur.execute(f'SELECT {data_name} FROM friendly_rate WHERE uid=:uid;',{'uid':uid})
         sql_data = sql_cur.fetchall()
         result = sql_data[0][0]
@@ -189,6 +190,8 @@ def __getData__(sql_cur, uid:int, data_name:str, outside=False):
         else:
             __logWrite__(uid,'조회(내부)',f'{data_name}={result}')
         return result
+    else:
+        return 0
 
 def __dataCheck__(uid, data_name, amount, funcInfo):
     '''데이터가 잘못된 부분이 없는 지 확인하는 코드
@@ -296,6 +299,9 @@ def getPenalty(uid:int):
 def getLastCallDate(uid:int):
     return __getDataFromOutside__(uid, 'last_call')
     #str형으로 반환, 내부에서 작업할 때는 %Y-%m-%d %H:%M:%S.%f 형식으로 datetime형으로 변환해야 함
+
+def getRegisterDate(uid:int):
+    return __getDataFromOutside__(uid, 'first_call')
 
 def getFriendlyRate(uid:int):
     return Decimal(str(__getDataFromOutside__(uid, 'friendly_rate')))
@@ -412,9 +418,9 @@ if __name__ == '__main__':
         finally:
             sql_data = sql_cur.fetchall()
             print(f'데이터 개수 : {len(sql_data)}')
-            print(tui.fixedWidth('uid',20,1)+tui.fixedWidth('마지막 호출 시간',27,1)+'군바'+tui.fixedWidth('command',9,2),tui.fixedWidth('day',9,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
+            print(tui.fixedWidth('uid',20,1)+tui.fixedWidth('최초 등록 시간',27,1)+tui.fixedWidth('마지막 호출 시간',27,1)+'군바'+tui.fixedWidth('command',9,2),tui.fixedWidth('day',9,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
             for row in sql_data:
-                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],27)+tui.fixedWidth(row[2],4,1)+tui.fixedWidth(row[3],9,2),tui.fixedWidth(row[4],9,2),tui.fixedWidth(format(row[5],".2f"),12,2),tui.fixedWidth(format(row[6],".2f"),12,2))
+                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],27)+tui.fixedWidth(row[2],27)+tui.fixedWidth(row[3],4,1)+tui.fixedWidth(row[4],9,2),tui.fixedWidth(row[5],9,2),tui.fixedWidth(format(row[6],".2f"),12,2),tui.fixedWidth(format(row[7],".2f"),12,2))
             
     elif arg == 2:
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))

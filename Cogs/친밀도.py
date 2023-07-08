@@ -5,7 +5,7 @@ global guild_ids
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from main import guild_ids
-from FriendlyRate import getCommandCount, getDayCount, getPenalty, getLastCallDate, getFriendlyRate, register, commandCallCalc
+from FriendlyRate import getCommandCount, getDayCount, getPenalty, getLastCallDate, getFriendlyRate, getRegisterDate, register, commandCallCalc
 
 '''친밀도와 관련된 작업을 하는 프론트엔드
 정보 명령어도 여기에 있고 다른 파일에서 쓰일 친밀함 여부를 정하는 것도 이 파일
@@ -36,9 +36,10 @@ class FriendlyRateFrontend(commands.Cog):
             e_title = f'현재 에루의 호감도는 {friendly_rate}이에요!'
             e_desc = '임시'
         embed = discord.Embed(title=e_title,description=e_desc,color=0xfdeccf)
-        embed.add_field(name='에루 짱과 함께한 날',value=f'{getDayCount(ctx.author.id)}일',inline=False)
-        embed.add_field(name='명령어 사용 횟수',value=f'{getCommandCount(ctx.author.id)}회',inline=False)
-        embed.add_field(name='누적 패널티',value=getPenalty(ctx.author.id),inline=False)
+        embed.add_field(name='에루 짱과 처음 만난 날',value=getRegisterDate(ctx.author.id),inline=False)
+        embed.add_field(name='에루 짱과 함께한 날',value=f'{getDayCount(ctx.author.id)}일',inline=True)
+        embed.add_field(name='명령어 사용 횟수',value=f'{getCommandCount(ctx.author.id)}회',inline=True)
+        embed.add_field(name='누적 패널티',value=getPenalty(ctx.author.id),inline=True)
         await ctx.respond(embed=embed)
 
 def setup(bot):
