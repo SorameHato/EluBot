@@ -102,7 +102,7 @@ def __connectDB__():
     이 함수를 쓸 때에는 sql_con, sql_cur = __connectDB__() 처럼
     앞에 변수를 2개 줘서 써야 한다!
     '''
-    sql_con = sqlite3.connect("..\친밀도.db")
+    sql_con = sqlite3.connect("친밀도.db")
     sql_cur = sql_con.cursor()
     return sql_con, sql_cur
 

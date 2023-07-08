@@ -153,3 +153,4 @@ cython_debug/
 elu_session
 token.txt
 log.csv
+친밀도.db
