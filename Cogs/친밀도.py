@@ -38,25 +38,26 @@ class FriendlyRateFrontend(commands.Cog):
     
     @commands.slash_command(name='호감도',guild_ids=guild_ids,description='자신의 호감도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
-        fCode = friendlyRate(ctx.author.id)
-        if fCode == 0:
-            e_title = f'현재 호감도는 {friendly_rate}입니다.'
-            e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 합니다. 잘 부탁드립니다.','저는 지금 목조 건물 마을에서 지내고 있습니다. 풍경도 좋고 좋은 사람들도 있어서 살기 좋은 마을 같습니다.', '브라이트 버니는 전국적으로 가맹점을 가지고 있는 유명한 커피 체인입니다. 언젠가 한 번 들려주시기를 고대하겠습니다.'])
-        elif fCode == 1:
-            e_title = f'현재 호감도는 {friendly_rate}이에요.'
-            e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드립니다.','목조 건물 마을에는 \'래빗 하우스\'라는 역사가 깊은 커피숍이 있습니다. 소문에 따르면 저녁에는 어른들의 공간으로 바뀐다고 해요.', '진저 나츠메라는 쌍둥이 동생이 있습니다. 왜인지 사람들은 나츠메가 언니인 것 같다고 그러지만, 제가 언니에요.'])
-        elif fCode == 2:
-            e_title = f'현재 호감도는 {friendly_rate}이에요!'
-            e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드려요!','브라이트 버니의 목조 건물 마을 지점에서 일하는 \'후이바 후유\'라는 알바생은 처음에는 어딘가 무서워 보였는데, 래빗 하우스에서 하룻밤 묵으면서 같이 논 것을 계기로 친해졌어요!','저는 전학을 자주 다녀서, 너무 친해지면 헤어질 때 괴로우니까 무난한 캐릭터를 연기하고 있어요. 나츠메는 소심한 이미지고, 전 쿨한 이미지에요! 어땠나요? 헤헤.\n(뒤에서 듣고 있던 마야 : 전혀 안 어울려.)'])
-        elif fCode == 3:
-            e_title = f'현재 호감도는 {friendly_rate}입니닷!'
-            e_desc = '임시 메세지'
-        elif fCode == 4:
-            e_title = f'현재 호감도는 {friendly_rate}입니당!'
-            e_desc = '임시 메세지'
-        else:
-            e_title = f'현재 에루의 호감도는 {friendly_rate}이에요!'
-            e_desc = '임시 메세지'
+        friendly_rate = friendlyRate(ctx.author.id)
+        match friendly_rate:
+            case 0:
+                e_title = f'현재 호감도는 {friendly_rate}입니다.'
+                e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 합니다. 잘 부탁드립니다.','저는 지금 목조 건물 마을에서 지내고 있습니다. 풍경도 좋고 좋은 사람들도 있어서 살기 좋은 마을 같습니다.', '브라이트 버니는 전국적으로 가맹점을 가지고 있는 유명한 커피 체인입니다. 언젠가 한 번 들려주시기를 고대하겠습니다.'])
+            case 1:
+                e_title = f'현재 호감도는 {friendly_rate}이에요.'
+                e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드립니다.','목조 건물 마을에는 \'래빗 하우스\'라는 역사가 깊은 커피숍이 있습니다. 소문에 따르면 저녁에는 어른들의 공간으로 바뀐다고 해요.', '진저 나츠메라는 쌍둥이 동생이 있습니다. 왜인지 사람들은 나츠메가 언니인 것 같다고 그러지만, 제가 언니에요.'])
+            case 2:
+                e_title = f'현재 호감도는 {friendly_rate}이에요!'
+                e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드려요!','브라이트 버니의 목조 건물 마을 지점에서 일하는 \'후이바 후유\'라는 알바생은 처음에는 어딘가 무서워 보였는데, 래빗 하우스에서 하룻밤 묵으면서 같이 논 것을 계기로 친해졌어요!','저는 전학을 자주 다녀서, 너무 친해지면 헤어질 때 괴로우니까 무난한 캐릭터를 연기하고 있어요. 나츠메는 소심한 이미지고, 전 쿨한 이미지에요! 어땠나요? 헤헤.\n(뒤에서 듣고 있던 마야 : 전혀 안 어울려.)'])
+            case 3:
+                e_title = f'현재 호감도는 {friendly_rate}입니닷!'
+                e_desc = '임시 메세지'
+            case 4:
+                e_title = f'현재 호감도는 {friendly_rate}입니당!'
+                e_desc = '임시 메세지'
+            case _:
+                e_title = f'현재 에루의 호감도는 {friendly_rate}이에요!'
+                e_desc = '임시 메세지'
         embed = discord.Embed(title=e_title,description=e_desc,color=0xfdeccf)
         embed.add_field(name='에루 짱과 처음 만난 날',value=getRegisterDate(ctx.author.id),inline=False)
         embed.add_field(name='에루 짱과 함께한 날',value=f'{getDayCount(ctx.author.id)}일',inline=True)
@@ -69,13 +70,22 @@ class FriendlyRateFrontend(commands.Cog):
         if text == '동의':
             a = register(ctx.author.id)
             if a == 1:
-                await ctx.respond('회원가입 완료 임시 테키스토!')
+                embed = discord.Embed(title='회원가입이 완료되었습니다.',description='앞으로 부디 잘 부탁드리겠습니다.\n에루봇 가입 만으로 에루봇과 하늘봇의 데이터가 전부 생성되었습니다. 하늘봇의 개시는 며칠 후 예정되어 있으니 잠시만 기다려주시면 감사드리겠습니다.',color=0xfdeccf)
             elif a == -1:
-                await ctx.respond('이미 데이터가 있어요!')
+                match friendlyRate(ctx.author.id):
+                    case 1:
+                        embed = discord.Embed(title='이미 데이터가 존재해요.',description='데이터는 중복으로 생성할 수 없어요.',color=0xfdeccf)
+                    case 2:
+                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 친한 사이잖아요?',description='설마 잊어버리신 건가요?',color=0xfdeccf)
+                    case 3 | 4:
+                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 많이 친한 사이잖아요?',description='제 곁에 오래 있어주셨으면서, 설마 잊어버리신 건가요?',color=0xfdeccf)
+                    case _:
+                        embed = discord.Embed(title='이미 데이터가 존재합니다.',description='데이터는 중복으로 생성할 수 없습니다.',color=0xfdeccf)
             else:
-                await ctx.respond('오류 발생 임시 테키스토!')
+                embed = discord.Embed(title='회원가입 중 오류가 발생했습니다.',description='번거롭지만 하토를 불러주십시오.',color=0xfdeccf)
         else:
-            await ctx.respond('약관 동의 임시 테키스토!')
+            embed = discord.Embed(title='어서 오세요. 회원증 좀 보여 주시겠어요?',description='회원가입은 아래의 약관에 동의하셔야 가능합니다. 약관에 동의하시면 \'/회원가입 동의\'라는 명령어를 입력해 주십시오.\nhttps://github.com/SorameHato/EluBot/blob/main/%EB%94%94%EC%BD%94%EB%B4%87%20%EC%95%BD%EA%B4%80.txt',color=0xfdeccf)
+        await ctx.respond(embed=embed)
 
 def setup(bot):
     bot.add_cog(FriendlyRateFrontend(bot))
