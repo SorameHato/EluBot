@@ -255,7 +255,7 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
         else:
             func = 'Set(내부 자동)'
         __logWrite__(uid,func,f'{data_name} ─→ {amount}')
-        __commit__(sql_con)
+        #__commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur,uid)
 
@@ -276,7 +276,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
             __logWrite__(uid,func,f'{data_name} + {amount}')
         else:
             __logWrite__(uid,func,f'{data_name} - {abs(amount)}')
-        __commit__(sql_con)
+        #__commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur, uid)
 
