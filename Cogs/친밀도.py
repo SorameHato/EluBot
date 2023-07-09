@@ -1,6 +1,7 @@
 # coding: utf-8
 import discord, random
 from discord.ext import commands
+from datetime import datetime as dt
 global guild_ids
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -38,8 +39,33 @@ class FriendlyRateFrontend(commands.Cog):
     
     @commands.Cog.listener()
     async def on_application_command(self, ctx):
-        if ctx.command not in ['친밀도', '정보', '회원가입', '회원가입동의']:
-            commandCallCalc(ctx.author.id)
+        if ctx.command.name not in ['친밀도', '정보', '회원가입', '회원가입동의']:
+            f_arg, d_arg = commandCallCalc(ctx.author.id, dt.now())
+            match d_arg:
+                case 0:
+                    pass
+                    #날짜가 변하지 않은 경우이므로 아무것도 하지 않음
+                case 1:
+                    e_title = f'{ctx.author}님, 좋은 하루에요!'
+                    e_desc = '오늘도 에루를 찾아 주셨네요! 찾아주셔서 감사해요!'
+                    e_url = 'https://pbs.twimg.com/media/FmleeJtaEAIDqpk?format=jpg&name=large'
+                case 2:
+                    e_title = f'{ctx.author}님, 좋은 하루에요!'
+                    e_desc = '이틀만이에요! 어제는 바쁜 일이 있으셨던가요? 찾아주셔서 감사해요!'
+                    e_url = 'https://pbs.twimg.com/media/FmleeJtaEAIDqpk?format=jpg&name=large'
+                case 3 | 4 | 5 | 6 | 7:
+                    e_title = f'{ctx.author}님, 요즘 바쁘신건가요?'
+                    e_desc = f'{d_arg}일 만이네요. 에루랑 조금만 더 자주 놀아주시면 안 될까요?'
+                    e_url = 'https://i.ibb.co/XzmQjXD/img20220810-15093746-2.png'
+                case _:
+                    e_title = f'{ctx.author}님, 오랫만이에요.'
+                    e_desc = f'정말 오랫만에 오셨네요. 바쁜 일이 있으셨나요?\n(에루가 단단히 삐졌습니다. {d_arg}일 만에 접속하셔서 친밀도가 {14+2*(d_arg-8)}만큼 줄어들었습니다.)'
+                    e_url = None #추후 9화 마지막에 그 쿨한 척 하면서 책 읽고 있는 걸로 추가
+            embed = discord.Embed(title=e_title,description=e_desc,color=0xfdeccf)
+            if e_url != None:
+                embed.set_image(url=e_url)
+            embed.add_field(name='현재 친밀도',value=f_arg,inline=False)
+            ctx.respond(embed=embed)
     
     @commands.slash_command(name='친밀도',guild_ids=guild_ids,description='자신의 친밀도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
