@@ -31,10 +31,10 @@ class FriendlyRateFrontend(commands.Cog):
             e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드립니다.','목조 건물 마을에는 \'래빗 하우스\'라는 역사가 깊은 커피숍이 있습니다. 소문에 따르면 저녁에는 어른들의 공간으로 바뀐다고 해요.', '진저 나츠메라는 쌍둥이 동생이 있습니다. 왜인지 사람들은 나츠메가 언니인 것 같다고 그러지만, 제가 언니에요.'])
         elif friendly_rate <= 210:
             e_title = f'현재 호감도는 {friendly_rate}이에요!'
-            e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드려요!','브라이트 버니의 목조 건물 마을 지점에서 일하는 \'후이바 후유\'라는 알바생은 처음에는 어딘가 무서워 보였는데, 래빗 하우스에서 하룻밤 묵으면서 같이 논 것을 계기로 친해졌어요!'])
+            e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드려요!','브라이트 버니의 목조 건물 마을 지점에서 일하는 \'후이바 후유\'라는 알바생은 처음에는 어딘가 무서워 보였는데, 래빗 하우스에서 하룻밤 묵으면서 같이 논 것을 계기로 친해졌어요!','저는 전학을 자주 다녀서, 너무 친해지면 헤어질 때 괴로우니까 무난한 캐릭터를 연기하고 있어요. 나츠메는 소심한 이미지고, 전 쿨한 이미지에요! 어땠나요? 헤헤\n(뒤에서 듣고 있던 마야 : 전혀 안 어울려.)'])
         else:
             e_title = f'현재 에루의 호감도는 {friendly_rate}이에요!'
-            e_desc = '임시'
+            e_desc = '임시 메세지'
         embed = discord.Embed(title=e_title,description=e_desc,color=0xfdeccf)
         embed.add_field(name='에루 짱과 처음 만난 날',value=getRegisterDate(ctx.author.id),inline=False)
         embed.add_field(name='에루 짱과 함께한 날',value=f'{getDayCount(ctx.author.id)}일',inline=True)
