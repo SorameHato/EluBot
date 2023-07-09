@@ -229,7 +229,7 @@ def __dataCheck__(uid, data_name, amount, funcInfo):
         elif data_name == 'gunba':
             if type(amount) != bool:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 bool형이여야 합니다. amount의 타입 : {type(amount)}')
-        elif data_time == 'last_call':
+        elif data_name == 'last_call':
             if type(amount) != dt:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 datetime형이여야 합니다. amount의 타입 : {type(amount)}')
         else:
@@ -267,7 +267,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
     기존 add~ 함수 어짜피 내부에서만 쓰이니까 전부 합쳐버림
     '''
     if __dataCheck__(uid, data_name, amount, 'add'):
-        sql_cur.execute(f'UPDATE friendly_rate SET {data_name}(SELECT {data_name} FROM friendly_rate WHERE uid=:uid)+:amount WHERE uid=:uid;',{'uid':uid,'amount':amount})
+        sql_cur.execute(f'UPDATE friendly_rate SET {data_name}=(SELECT {data_name} FROM friendly_rate WHERE uid=:uid)+:amount WHERE uid=:uid;',{'uid':uid,'amount':amount})
         if sep:
             func = 'Add(내부 수동)'
         else:
@@ -329,9 +329,10 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         #In [64]: last_call = dt.strptime('2023-07-08 05:14:59.000','%Y-%m-%d %H:%M:%S.%f')
         #In [65]: last_call - todayStart
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
+        __addData__(sql_cur, uid, 'day_count', 1)
         restDay = abs((last_call - todayStart).days)
         __logWrite__(uid,'commandCallCalc',f'오늘 첫 사용, 미접속일 : {restDay}일')
-        if restday > 2 and restday <= 7:
+        if restDay > 2 and restDay <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
                 __addData__(sql_cur,uid,'total_penalty',3)

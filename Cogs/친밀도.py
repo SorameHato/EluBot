@@ -65,7 +65,7 @@ class FriendlyRateFrontend(commands.Cog):
             if e_url != None:
                 embed.set_image(url=e_url)
             embed.add_field(name='현재 친밀도',value=f_arg,inline=False)
-            ctx.respond(embed=embed)
+            await ctx.respond(embed=embed)
     
     @commands.slash_command(name='친밀도',guild_ids=guild_ids,description='자신의 친밀도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
