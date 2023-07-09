@@ -241,7 +241,7 @@ def __dataCheck__(uid, data_name, amount, funcInfo):
     else:
         return True
 
-def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
+def __setData__(sql_con, sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     데이터 수동 수정 용으로 만든 함수임!
     군바나 last_call, friendly_rate 설정하는 경우가 아니라면 절대로 함수 안에서 사용하지 말 것!
@@ -255,11 +255,11 @@ def __setData__(sql_cur, uid:int, data_name:str, amount, sep=False):
         else:
             func = 'Set(내부 자동)'
         __logWrite__(uid,func,f'{data_name} ─→ {amount}')
-        #__commit__(sql_con)
+        __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur,uid)
 
-def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
+def __addData__(sql_con, sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
     friendly_rate 테이블에서 uid에 대한 data_name의 값을
     amount만큼 바꾸는 함수
@@ -276,7 +276,7 @@ def __addData__(sql_cur, uid:int, data_name:str, amount, sep=False):
             __logWrite__(uid,func,f'{data_name} + {amount}')
         else:
             __logWrite__(uid,func,f'{data_name} - {abs(amount)}')
-        #__commit__(sql_con)
+        __commit__(sql_con)
         if sep:
             __calcFriendlyRate__(sql_cur, uid)
 
@@ -306,7 +306,7 @@ def getRegisterDate(uid:int):
 def getFriendlyRate(uid:int):
     return Decimal(str(__getDataFromOutside__(uid, 'friendly_rate')))
 
-def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
+def __updateLastCallDate__(sql_con, sql_cur, uid:int, date:dt, sep=False):
     '''
     마지막으로 부른 날짜를 현재 시간으로 바꾸고 마지막 호출 시간이 오늘이 아니면 day_count를 1 올리고 접속을 며칠만에 했는지에 따라 그에 따른 처리를 하는 함수
     return값은
@@ -319,7 +319,7 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
     __logWrite__(uid,'날짜 계산','해당 유저의 날짜계산 요청 접수')
     last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f')
     now = dt.now()
-    __setData__(sql_cur,uid,'last_call',now)
+    __setData__(sql_con, sql_cur,uid,'last_call',now)
     if now.time() >= time(5,15):
         todayStart = dt(now.year, now.month, now.day, 5, 15)
     else:
@@ -329,26 +329,26 @@ def __updateLastCallDate__(sql_cur, uid:int, date:dt, sep=False):
         #In [64]: last_call = dt.strptime('2023-07-08 05:14:59.000','%Y-%m-%d %H:%M:%S.%f')
         #In [65]: last_call - todayStart
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
-        __addData__(sql_cur, uid, 'day_count', 1)
+        __addData__(sql_con, sql_cur, uid, 'day_count', 1)
         restDay = abs((last_call - todayStart).days)
         __logWrite__(uid,'commandCallCalc',f'오늘 첫 사용, 미접속일 : {restDay}일')
         if restDay > 2 and restDay <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
-                __addData__(sql_cur,uid,'total_penalty',3)
+                __addData__(sql_con, sql_cur,uid,'total_penalty',3)
             else:
                 __logWrite__(uid,'commandCallCalc',f'해당 유저는 gunba가 True이므로 패널티를 부여하지 않았음')
         else:
-            __addData__(sql_cur,uid,'total_penalty',14+2*(restDay-8))
+            __addData__(sql_con, sql_cur,uid,'total_penalty',14+2*(restDay-8))
         returnArg = restDay
     else:
         returnArg = 0
     if sep:
-        __calcFriendlyRate__(sql_cur, uid)
+        __calcFriendlyRate__(sql_con, sql_cur, uid)
     return returnArg
         
 
-def __calcFriendlyRate__(sql_cur, uid:int):
+def __calcFriendlyRate__(sql_con, sql_cur, uid:int):
     '''
     현재 기록된 command_count, day_count, total_penalty의 값을 기준으로 friendly_rate를 계산하고 올바른 값으로 갱신하는 함수
     return값은 변경된 friendly_rate
@@ -358,7 +358,7 @@ def __calcFriendlyRate__(sql_cur, uid:int):
     total_penalty = Decimal(str(__getData__(sql_cur, uid, 'total_penalty')))
     friendly_rate = command_count * commandPoint + day_count * dayPoint - total_penalty
     __logWrite__(uid, '친밀도 계산', f'friendly_rate = {friendly_rate}')
-    __setData__(sql_cur, uid, 'friendly_rate', float(friendly_rate))
+    __setData__(sql_con, sql_cur, uid, 'friendly_rate', float(friendly_rate))
     return friendly_rate
 
 def commandCallCalc(uid:int, date:dt):
@@ -375,9 +375,9 @@ def commandCallCalc(uid:int, date:dt):
     '''
     __logWrite__(uid,'commandCallCalc','해당 유저의 commandCallCalc 요청 접수')
     sql_con, sql_cur = __connectDB__()
-    __addData__(sql_cur, uid, 'command_count', 1)
-    lastCallArg = __updateLastCallDate__(sql_cur, uid, date)
-    friendlyRateArg = __calcFriendlyRate__(sql_cur, uid)
+    __addData__(sql_con, sql_cur, uid, 'command_count', 1)
+    lastCallArg = __updateLastCallDate__(sql_con, sql_cur, uid, date)
+    friendlyRateArg = __calcFriendlyRate__(sql_con, sql_cur, uid)
     __commit__(sql_con,True)
     __logWrite__(uid,'commandCallCalc',f'해당 유저의 commandCallCalc 요청 처리 완료 | lastCallArg는 {lastCallArg}')
     return friendlyRateArg, lastCallArg
@@ -423,7 +423,7 @@ if __name__ == '__main__':
         data_name = input('설정할 attribute를 입력해주세요. : ')
         amount = input('설정할 값을 입력해주세요. : ')
         sql_con, sql_cur = __connectDB__()
-        __setData__(sql_cur, uid, data_name, amount, True)
+        __setData__(sql_con, sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
         print('설정 작업이 완료되었습니다. 데이터가 반영되었는지는 조회 메뉴에서 조회해주세요.')
     elif arg == 3:
@@ -431,7 +431,7 @@ if __name__ == '__main__':
         data_name = input('변경할 attribute를 입력해주세요. : ')
         amount = input('얼만큼 변경할 지 값을 입력해주세요. (값을 늘리려면 양수, 값을 줄이려면 음수) : ')
         sql_con, sql_cur = __connectDB__()
-        __setData__(sql_cur, uid, data_name, amount, True)
+        __setData__(sql_con, sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
         print('변경 작업이 완료되었습니다. 데이터가 반영되었는지는 조회 메뉴에서 조회해주세요.')
     elif arg == 4:
@@ -450,5 +450,5 @@ if __name__ == '__main__':
     elif arg == 6:
         uid = int(input('계산할 유저의 uid를 입력해주세요. : '))
         sql_con, sql_cur = __connectDB__()
-        friendly_rate = __calcFriendlyRate__(sql_cur, uid)
+        friendly_rate = __calcFriendlyRate__(sql_con, sql_cur, uid)
         print(f'{uid} 유저의 친밀도가 다시 계산되어, {friendly_rate}로 바뀌었습니다.')
