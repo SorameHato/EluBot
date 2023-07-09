@@ -38,29 +38,30 @@ class FriendlyRateFrontend(commands.Cog):
     
     @commands.Cog.listener()
     async def on_application_command(self, ctx):
-        print(ctx.command)
+        if ctx.command not in ['친밀도', '정보', '회원가입', '회원가입동의']:
+            commandCallCalc(ctx.author.id)
     
-    @commands.slash_command(name='호감도',guild_ids=guild_ids,description='자신의 호감도 현황을 볼 수 있어요!')
+    @commands.slash_command(name='친밀도',guild_ids=guild_ids,description='자신의 친밀도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
         friendly_rate = friendlyRate(ctx.author.id)
         match friendly_rate:
             case 0:
-                e_title = f'현재 호감도는 {friendly_rate}입니다.'
+                e_title = f'현재 친밀도는 {friendly_rate}입니다.'
                 e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 합니다. 잘 부탁드립니다.','저는 지금 목조 건물 마을에서 지내고 있습니다. 풍경도 좋고 좋은 사람들도 있어서 살기 좋은 마을 같습니다.', '브라이트 버니는 전국적으로 가맹점을 가지고 있는 유명한 커피 체인입니다. 언젠가 한 번 들려주시기를 고대하겠습니다.'])
             case 1:
-                e_title = f'현재 호감도는 {friendly_rate}이에요.'
+                e_title = f'현재 친밀도는 {friendly_rate}이에요.'
                 e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드립니다.','목조 건물 마을에는 \'래빗 하우스\'라는 역사가 깊은 커피숍이 있습니다. 소문에 따르면 저녁에는 어른들의 공간으로 바뀐다고 해요.', '진저 나츠메라는 쌍둥이 동생이 있습니다. 왜인지 사람들은 나츠메가 언니인 것 같다고 그러지만, 제가 언니에요.'])
             case 2:
-                e_title = f'현재 호감도는 {friendly_rate}이에요!'
+                e_title = f'현재 친밀도는 {friendly_rate}이에요!'
                 e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 해요. 잘 부탁드려요!','브라이트 버니의 목조 건물 마을 지점에서 일하는 \'후이바 후유\'라는 알바생은 처음에는 어딘가 무서워 보였는데, 래빗 하우스에서 하룻밤 묵으면서 같이 논 것을 계기로 친해졌어요!','저는 전학을 자주 다녀서, 너무 친해지면 헤어질 때 괴로우니까 무난한 캐릭터를 연기하고 있어요. 나츠메는 소심한 이미지고, 전 쿨한 이미지에요! 어땠나요? 헤헤.\n(뒤에서 듣고 있던 마야 : 전혀 안 어울려.)'])
             case 3:
-                e_title = f'현재 호감도는 {friendly_rate}입니닷!'
+                e_title = f'현재 친밀도는 {friendly_rate}입니닷!'
                 e_desc = '임시 메세지'
             case 4:
-                e_title = f'현재 호감도는 {friendly_rate}입니당!'
+                e_title = f'현재 친밀도는 {friendly_rate}입니당!'
                 e_desc = '임시 메세지'
             case _:
-                e_title = f'현재 에루의 호감도는 {friendly_rate}이에요!'
+                e_title = f'현재 에루의 친밀도는 {friendly_rate}이에요!'
                 e_desc = '임시 메세지'
         embed = discord.Embed(title=e_title,description=e_desc,color=0xfdeccf)
         embed.add_field(name='에루 짱과 처음 만난 날',value=getRegisterDate(ctx.author.id),inline=False)
