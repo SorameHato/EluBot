@@ -29,6 +29,7 @@ async def on_ready():
 async def on_application_command_error(ctx, error):
     embed = discord.Embed(title='자세한 내용',description=error,color=0xfae5fa)
     embed.add_field(name="보낸 분",value=ctx.author,inline=False)
+    embed.add_field(name="보낸 명령어",value=ctx.command,inline=False)
     embed.add_field(name="보낸 내용",value=ctx.message,inline=False)
     embed.set_footer(text=f'에루봇 버전 {elu_ver}')
     embed.set_image(url='https://i.ibb.co/7KNJZh4/lapis10-mp4-snapshot-08-40-2023-05-26-01-52-32.png')

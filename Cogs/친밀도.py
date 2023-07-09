@@ -36,6 +36,10 @@ class FriendlyRateFrontend(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
     
+    @commands.Cog.listener()
+    async def on_application_command(self, ctx):
+        print(ctx.command)
+    
     @commands.slash_command(name='호감도',guild_ids=guild_ids,description='자신의 호감도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
         friendly_rate = friendlyRate(ctx.author.id)
