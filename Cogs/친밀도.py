@@ -86,6 +86,10 @@ class FriendlyRateFrontend(commands.Cog):
         else:
             embed = discord.Embed(title='어서 오세요. 회원증 좀 보여 주시겠어요?',description='회원가입은 아래의 약관에 동의하셔야 가능합니다. 약관에 동의하시면 \'/회원가입 동의\'라는 명령어를 입력해 주십시오.\nhttps://github.com/SorameHato/EluBot/blob/main/%EB%94%94%EC%BD%94%EB%B4%87%20%EC%95%BD%EA%B4%80.txt',color=0xfdeccf)
         await ctx.respond(embed=embed)
+    
+    @commands.slash_command(name='회원가입동의',description='(모바일용) 에루봇의 원활한 이용을 위한 데이터 생성과 회원가입을 할 수 있어요!',guild_ids=guild_ids)
+    async def register_FrontEndMobile(self,ctx):
+        await self.register_FrontEnd(ctx,'동의')
 
 def setup(bot):
     bot.add_cog(FriendlyRateFrontend(bot))
