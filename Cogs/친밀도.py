@@ -69,8 +69,9 @@ class FriendlyRateFrontend(commands.Cog):
     
     @commands.slash_command(name='친밀도',guild_ids=guild_ids,description='자신의 친밀도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
-        friendly_rate = friendlyRate(ctx.author.id)
-        match friendly_rate:
+        friendly_rate_code = friendlyRate(ctx.author.id)
+        friendly_rate = friendlyRateOrg(ctx.author.id)
+        match friendly_rate_code:
             case 0:
                 e_title = f'현재 친밀도는 {friendly_rate}입니다.'
                 e_desc = random.choice(['브라이트 버니 사장 딸, 진저 에루라고 합니다. 잘 부탁드립니다.','저는 지금 목조 건물 마을에서 지내고 있습니다. 풍경도 좋고 좋은 사람들도 있어서 살기 좋은 마을 같습니다.', '브라이트 버니는 전국적으로 가맹점을 가지고 있는 유명한 커피 체인입니다. 언젠가 한 번 방문해주시기를 고대하겠습니다.'])
