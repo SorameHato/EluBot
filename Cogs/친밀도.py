@@ -41,6 +41,19 @@ class FriendlyRateFrontend(commands.Cog):
         embed.add_field(name='명령어 사용 횟수',value=f'{getCommandCount(ctx.author.id)}회',inline=True)
         embed.add_field(name='누적 패널티',value=getPenalty(ctx.author.id),inline=True)
         await ctx.respond(embed=embed)
+    
+    @commands.slash_command(name='회원가입',description='에루봇의 원활한 이용을 위한 데이터 생성과 회원가입을 할 수 있어요!',guild_ids=guild_ids)
+    async def register_FrontEnd(self,ctx,text:discord.Option(str,'약관에 동의하시면 \'동의\'라고 입력해주세요!',required=False)):
+        if text == '동의':
+            a = register(ctx.author.id)
+            if a == 1:
+                await ctx.respond('회원가입 완료 임시 테키스토!')
+            elif a == -1:
+                await ctx.respond('이미 데이터가 있어요!')
+            else:
+                await ctx.respond('오류 발생 임시 테키스토!')
+        else:
+            await ctx.respond('약관 동의 임시 테키스토!')
 
 def setup(bot):
     bot.add_cog(FriendlyRateFrontend(bot))
