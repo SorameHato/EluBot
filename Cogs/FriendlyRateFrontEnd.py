@@ -2,6 +2,8 @@
 import discord, random
 from discord.ext import commands
 from datetime import datetime as dt
+from datetime import timedelta as td
+from datetime import timezone as tz
 global guild_ids
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
@@ -42,7 +44,7 @@ class FriendlyRateFrontend(commands.Cog):
     @commands.Cog.listener()
     async def on_application_command(self, ctx):
         if ctx.command.name not in ['친밀도', '정보', '회원가입', '회원가입동의']:
-            f_arg, d_arg = commandCallCalc(ctx.author.id, dt.now())
+            f_arg, d_arg = commandCallCalc(ctx.author.id, dt.now(tz(td(hours=9))))
             match d_arg:
                 case 0:
                     pass
