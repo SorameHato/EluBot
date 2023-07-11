@@ -9,8 +9,6 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 from main import guild_ids
 from FriendlyRate import getCommandCount, getDayCount, getPenalty, getLastCallDate, getFriendlyRate, getRegisterDate, register, commandCallCalc
-global elu_color
-elu_color = 0xfdeccf
 
 '''친밀도와 관련된 작업을 하는 프론트엔드
 정보 명령어도 여기에 있고 다른 파일에서 쓰일 친밀함 여부를 정하는 것도 이 파일
@@ -40,6 +38,7 @@ def friendlyRateOrg(uid:int):
 class FriendlyRateFrontend(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
+        bot.elu_color = 0xfdeccf
     
     @commands.Cog.listener()
     async def on_application_command(self, ctx):
@@ -65,7 +64,7 @@ class FriendlyRateFrontend(commands.Cog):
                     e_title = f'{ctx.author}님, 오랫만이에요.'
                     e_desc = f'정말 오랫만에 오셨네요. 바쁜 일이 있으셨나요?\n(에루가 단단히 삐졌습니다. {d_arg}일 만에 접속하셔서 친밀도가 {14+2*(d_arg-8)}만큼 줄어들었습니다. 다만 스카이방 분들은 줄어들지 않아야 합니다. 친밀도 명령어를 이용해 패널티가 늘어났는지 확인해보시고, 늘어났으면 하토를 불러주세요. 없애 드리겠습니다.)'
                     e_url = None #추후 9권 마지막에 그 쿨한 척 하면서 책 읽고 있는 걸로 추가
-            embed = discord.Embed(title=e_title,description=e_desc,color=elu_color)
+            embed = discord.Embed(title=e_title,description=e_desc,color=self.elu_color)
             if e_url != None:
                 embed.set_image(url=e_url)
             embed.add_field(name='현재 친밀도',value=f_arg,inline=False)
@@ -94,7 +93,7 @@ class FriendlyRateFrontend(commands.Cog):
             case _:
                 e_title = f'현재 에루의 친밀도는 {friendly_rate}이에요!'
                 e_desc = '임시 메세지'
-        embed = discord.Embed(title=e_title,description=e_desc,color=elu_color)
+        embed = discord.Embed(title=e_title,description=e_desc,color=self.elu_color)
         embed.add_field(name='에루 짱과 처음 만난 날',value=getRegisterDate(ctx.author.id),inline=False)
         embed.add_field(name='에루 짱과 함께한 날',value=f'{getDayCount(ctx.author.id)}일',inline=True)
         embed.add_field(name='명령어 사용 횟수',value=f'{getCommandCount(ctx.author.id)}회',inline=True)
@@ -109,21 +108,21 @@ class FriendlyRateFrontend(commands.Cog):
             else:
                 a = register(ctx.author.id,0)
             if a == 1:
-                embed = discord.Embed(title='회원가입이 완료되었습니다.',description='앞으로 부디 잘 부탁드리겠습니다.\n에루봇 가입 만으로 에루봇과 하늘봇의 데이터가 전부 생성되었습니다. 하늘봇의 개시는 며칠 후 예정되어 있으니 잠시만 기다려주시면 감사드리겠습니다.',color=elu_color)
+                embed = discord.Embed(title='회원가입이 완료되었습니다.',description='앞으로 부디 잘 부탁드리겠습니다.\n에루봇 가입 만으로 에루봇과 하늘봇의 데이터가 전부 생성되었습니다. 하늘봇의 개시는 며칠 후 예정되어 있으니 잠시만 기다려주시면 감사드리겠습니다.',color=self.elu_color)
             elif a == -1:
                 match friendlyRate(ctx.author.id):
                     case 1:
-                        embed = discord.Embed(title='이미 데이터가 존재해요.',description='데이터는 중복으로 생성할 수 없어요.',color=elu_color)
+                        embed = discord.Embed(title='이미 데이터가 존재해요.',description='데이터는 중복으로 생성할 수 없어요.',color=self.elu_color)
                     case 2:
-                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 친한 사이잖아요?',description='설마 잊어버리신 건가요?',color=elu_color)
+                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 친한 사이잖아요?',description='설마 잊어버리신 건가요?',color=self.elu_color)
                     case 3 | 4:
-                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 많이 친한 사이잖아요?',description='제 곁에 오래 있어주셨으면서, 설마 잊어버리신 건가요?',color=elu_color)
+                        embed = discord.Embed(title=f'{ctx.author}님은 이미 에루랑 많이 친한 사이잖아요?',description='제 곁에 오래 있어주셨으면서, 설마 잊어버리신 건가요?',color=self.elu_color)
                     case _:
-                        embed = discord.Embed(title='이미 데이터가 존재합니다.',description='데이터는 중복으로 생성할 수 없습니다.',color=elu_color)
+                        embed = discord.Embed(title='이미 데이터가 존재합니다.',description='데이터는 중복으로 생성할 수 없습니다.',color=self.elu_color)
             else:
-                embed = discord.Embed(title='회원가입 중 오류가 발생했습니다.',description='번거롭지만 하토를 불러주십시오.',color=elu_color)
+                embed = discord.Embed(title='회원가입 중 오류가 발생했습니다.',description='번거롭지만 하토를 불러주십시오.',color=self.elu_color)
         else:
-            embed = discord.Embed(title='어서 오세요. 회원증 좀 보여 주시겠어요?',description='회원가입은 아래의 약관에 동의하셔야 가능합니다. 약관에 동의하시면 \'/회원가입 동의\'라는 명령어를 입력해 주십시오.\nhttps://github.com/SorameHato/EluBot/blob/main/%EB%94%94%EC%BD%94%EB%B4%87%20%EC%95%BD%EA%B4%80.txt',color=elu_color)
+            embed = discord.Embed(title='어서 오세요. 회원증 좀 보여 주시겠어요?',description='회원가입은 아래의 약관에 동의하셔야 가능합니다. 약관에 동의하시면 \'/회원가입 동의\'라는 명령어를 입력해 주십시오.\nhttps://github.com/SorameHato/EluBot/blob/main/%EB%94%94%EC%BD%94%EB%B4%87%20%EC%95%BD%EA%B4%80.txt',color=self.elu_color)
         await ctx.respond(embed=embed)
     
     @commands.slash_command(name='회원가입동의',description='(모바일용) 에루봇의 원활한 이용을 위한 데이터 생성과 회원가입을 할 수 있어요!',guild_ids=guild_ids)
