@@ -341,7 +341,10 @@ def __updateLastCallDate__(sql_con, sql_cur, uid:int, date:dt, sep=False):
             else:
                 __logWrite__(uid,'commandCallCalc',f'해당 유저는 gunba가 True이므로 패널티를 부여하지 않았음')
         else:
-            __addData__(sql_con, sql_cur,uid,'total_penalty',14+2*(restDay-8))
+            if gunba >= 2:
+                __logWrite__(uid,'commandCallCalc',f'해당 유저는 gunba가 2 이상이므로 패널티를 부여하지 않았음')
+            else:
+                __addData__(sql_con, sql_cur,uid,'total_penalty',14+2*(restDay-8))
         returnArg = restDay
     else:
         returnArg = 0
