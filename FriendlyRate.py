@@ -419,9 +419,9 @@ if __name__ == '__main__':
         finally:
             sql_data = sql_cur.fetchall()
             print(f'데이터 개수 : {len(sql_data)}')
-            print(tui.fixedWidth('uid',20,1)+tui.fixedWidth('최초 등록 시간',27,1)+tui.fixedWidth('마지막 호출 시간',27,1)+'군바'+tui.fixedWidth('command',9,2),tui.fixedWidth('day',9,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
+            print(tui.fixedWidth('uid',20,1)+tui.fixedWidth('최초 등록 시간',35,1)+tui.fixedWidth('마지막 호출 시간',35,1)+'군바'+tui.fixedWidth('command',9,2),tui.fixedWidth('day',9,2),tui.fixedWidth('penalty',12,2),tui.fixedWidth('호감도',12,2))
             for row in sql_data:
-                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],27)+tui.fixedWidth(row[2],27)+tui.fixedWidth(row[3],4,1)+tui.fixedWidth(row[4],9,2),tui.fixedWidth(row[5],9,2),tui.fixedWidth(format(row[6],".2f"),12,2),tui.fixedWidth(format(row[7],".2f"),12,2))
+                print(tui.fixedWidth(row[0],20)+tui.fixedWidth(row[1],35)+tui.fixedWidth(row[2],35)+tui.fixedWidth(row[3],4,1)+tui.fixedWidth(row[4],9,2),tui.fixedWidth(row[5],9,2),tui.fixedWidth(format(row[6],".2f"),12,2),tui.fixedWidth(format(row[7],".2f"),12,2))
             
     elif arg == 2:
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
