@@ -1,5 +1,6 @@
 import sqlite3, csv
 from datetime import datetime as dt
+from datetime import timezone as tz
 from datetime import timedelta as td
 from datetime import date, time
 from decimal import getcontext, Decimal
@@ -116,7 +117,7 @@ def __logWrite__(uid,task:str,text:str):
     '''
     with open('log.csv','a',encoding='utf-8',newline='') as a:
         writer = csv.writer(a)
-        writer.writerow([dt.now(),uid,task,text])
+        writer.writerow([dt.now(tz(td(hours=9))),uid,task,text])
 
 def __commit__(sql_con,closeCon=False):
     '''
@@ -168,6 +169,7 @@ def register(uid:int):
     sql_data = sql_cur.fetchall()
     if len(sql_data) == 0:
         sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':dt.now()})
+        now = dt.now(tz(td(hours=9)))
         __logWrite__(uid,'등록',f'해당 유저 초기등록 완료')
         __commit__(sql_con,True)
         return 1
@@ -318,7 +320,7 @@ def __updateLastCallDate__(sql_con, sql_cur, uid:int, date:dt, sep=False):
     #Out[46]: datetime.datetime(2023, 5, 1, 12, 34, 56, 789000)
     __logWrite__(uid,'날짜 계산','해당 유저의 날짜계산 요청 접수')
     last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f')
-    now = dt.now()
+    now = dt.now(tz(td(hours=9)))
     __setData__(sql_con, sql_cur,uid,'last_call',now)
     if now.time() >= time(5,15):
         todayStart = dt(now.year, now.month, now.day, 5, 15)
