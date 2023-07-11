@@ -7,6 +7,7 @@ from datetime import timezone as tz
 from datetime import timedelta as td
 import os
 import sys
+import pathlib
 from SkyLib import tui
 bot = discord.Bot()
 elu_ver = "0.0 rev 1 build 1 @ 20230704"
@@ -43,7 +44,7 @@ async def on_application_command_error(ctx, error):
 
 
 def load_extensions():
-    for filename in os.listdir('Cogs'):
+    for filename in os.listdir(pathlib.PurePath(__file__).parent.joinpath('Cogs')):
         if filename.endswith('.py'):
             bot.load_extension('Cogs.{}'.format(filename[:-3]))
 
