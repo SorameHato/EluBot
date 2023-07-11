@@ -227,13 +227,10 @@ def __dataCheck__(uid, data_name, amount, funcInfo):
         # last_call : dt형
         # 그 외(command_count, day_count) : int형
         if data_name in ['total_penalty','friendly_rate']:
-            if type(amount) is not int and type(amount) is not float:
+            if type(amount) != int and type(amount) != float:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 int형 또는 float형이여야 합니다. amount의 타입 : {type(amount)}')
-        elif data_name == 'gunba':
-            if type(amount) != bool:
-                raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 bool형이여야 합니다. amount의 타입 : {type(amount)}')
         elif data_name == 'last_call':
-            if type(amount) != dt:
+            if type(amount) != dt and type(amount) != str:
                 raise ValueError(f'amount의 타입이 잘못되었습니다. amount는 datetime형이여야 합니다. amount의 타입 : {type(amount)}')
         else:
             if type(amount) != int:
