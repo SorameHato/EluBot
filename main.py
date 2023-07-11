@@ -50,5 +50,5 @@ def load_extensions():
 
 load_extensions()
 
-with open('token.txt','r') as token:
+with open(pathlib.PurePath(__file__).with_name('token.txt'),'r') as token:
     bot.run(token.readline())
