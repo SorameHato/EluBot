@@ -115,7 +115,7 @@ def __logWrite__(uid,task:str,text:str):
     task : 작업명 또는 함수명 (변경, 커밋, 생성, 조회 등)
     text : 상세한 작업 내역 (친밀도 1024.50 (1130,300,0) → 1027.50 (1131,301,0) 변경 처럼 어떤 걸 어떻게 변경했는 지 등을 상세하게 기록)
     '''
-    with open('log.csv','a',encoding='utf-8',newline='') as a:
+    with open(pathlib.PurePath(__file__).with_name('log.csv'),'a',encoding='utf-8',newline='') as a:
         writer = csv.writer(a)
         writer.writerow([dt.now(tz(td(hours=9))),uid,task,text])
 
