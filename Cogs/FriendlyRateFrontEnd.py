@@ -64,11 +64,12 @@ class FriendlyRateFrontend(commands.Cog):
                     e_title = f'{ctx.author}님, 오랫만이에요.'
                     e_desc = f'정말 오랫만에 오셨네요. 바쁜 일이 있으셨나요?\n(에루가 단단히 삐졌습니다. {d_arg}일 만에 접속하셔서 친밀도가 {14+2*(d_arg-8)}만큼 줄어들었습니다. 다만 스카이방 분들은 줄어들지 않아야 합니다. 친밀도 명령어를 이용해 패널티가 늘어났는지 확인해보시고, 늘어났으면 하토를 불러주세요. 없애 드리겠습니다.)'
                     e_url = None #추후 9권 마지막에 그 쿨한 척 하면서 책 읽고 있는 걸로 추가
-            embed = discord.Embed(title=e_title,description=e_desc,color=self.bot.elu_color)
-            if e_url != None:
-                embed.set_image(url=e_url)
-            embed.add_field(name='현재 친밀도',value=f_arg,inline=False)
-            await ctx.respond(embed=embed)
+            if d_arg:
+                embed = discord.Embed(title=e_title,description=e_desc,color=self.bot.elu_color)
+                if e_url != None:
+                    embed.set_image(url=e_url)
+                embed.add_field(name='현재 친밀도',value=f_arg,inline=False)
+                await ctx.respond(embed=embed)
     
     @commands.slash_command(name='친밀도',guild_ids=guild_ids,description='자신의 친밀도 현황을 볼 수 있어요!')
     async def friendlyRate_FrontEnd(self, ctx):
