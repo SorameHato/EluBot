@@ -38,7 +38,7 @@ def friendlyRateOrg(uid:int):
 class FriendlyRateFrontend(commands.Cog):
     def __init__(self,bot):
         self.bot = bot
-        bot.elu_color = 0xfdeccf
+        self.bot.elu_color = 0xfdeccf
     
     @commands.Cog.listener()
     async def on_application_command(self, ctx):
