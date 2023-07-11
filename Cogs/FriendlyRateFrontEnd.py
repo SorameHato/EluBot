@@ -61,8 +61,8 @@ class FriendlyRateFrontend(commands.Cog):
                     e_url = 'https://i.ibb.co/XzmQjXD/img20220810-15093746-2.png'
                 case _:
                     e_title = f'{ctx.author}님, 오랫만이에요.'
-                    e_desc = f'정말 오랫만에 오셨네요. 바쁜 일이 있으셨나요?\n(에루가 단단히 삐졌습니다. {d_arg}일 만에 접속하셔서 친밀도가 {14+2*(d_arg-8)}만큼 줄어들었습니다.)'
-                    e_url = None #추후 9화 마지막에 그 쿨한 척 하면서 책 읽고 있는 걸로 추가
+                    e_desc = f'정말 오랫만에 오셨네요. 바쁜 일이 있으셨나요?\n(에루가 단단히 삐졌습니다. {d_arg}일 만에 접속하셔서 친밀도가 {14+2*(d_arg-8)}만큼 줄어들었습니다. 다만 스카이방 분들은 줄어들지 않아야 합니다. 친밀도 명령어를 이용해 패널티가 늘어났는지 확인해보시고, 늘어났으면 하토를 불러주세요. 없애 드리겠습니다.)'
+                    e_url = None #추후 9권 마지막에 그 쿨한 척 하면서 책 읽고 있는 걸로 추가
             embed = discord.Embed(title=e_title,description=e_desc,color=elu_color)
             if e_url != None:
                 embed.set_image(url=e_url)
@@ -102,7 +102,10 @@ class FriendlyRateFrontend(commands.Cog):
     @commands.slash_command(name='회원가입',description='에루봇의 원활한 이용을 위한 데이터 생성과 회원가입을 할 수 있어요!',guild_ids=guild_ids)
     async def register_FrontEnd(self,ctx,text:discord.Option(str,'약관에 동의하시면 \'동의\'라고 입력해주세요!',required=False)):
         if text == '동의':
-            a = register(ctx.author.id)
+            if ctx.guild.id == 1126790936723210290:
+                a = register(ctx.author.id,2)
+            else:
+                a = register(ctx.author.id,0)
             if a == 1:
                 embed = discord.Embed(title='회원가입이 완료되었습니다.',description='앞으로 부디 잘 부탁드리겠습니다.\n에루봇 가입 만으로 에루봇과 하늘봇의 데이터가 전부 생성되었습니다. 하늘봇의 개시는 며칠 후 예정되어 있으니 잠시만 기다려주시면 감사드리겠습니다.',color=elu_color)
             elif a == -1:

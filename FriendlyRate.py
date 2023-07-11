@@ -159,7 +159,7 @@ def __createDB__(sql_con,sql_cur):
     __logWrite__('-','생성','테이블 생성 완료')
     __commit__(sql_con,True)
 
-def register(uid:int):
+def register(uid:int,gunba:int=0):
     '''
     유저를 최초로 등록하는 함수
     result : 등록 성공 1, 이미 데이터가 있음 -1
@@ -169,7 +169,7 @@ def register(uid:int):
     sql_data = sql_cur.fetchall()
     if len(sql_data) == 0:
         now = dt.now(tz(td(hours=9)))
-        sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':now})
+        sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call, gunba) VALUES(:uid, :dt, :dt, :gunba);',{'uid':uid,'dt':now, 'gunba':gunba})
         sql_cur.execute('INSERT INTO hanul_lv(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':now})
         __logWrite__(uid,'등록',f'해당 유저 초기등록 완료')
         __commit__(sql_con,True)
