@@ -300,7 +300,7 @@ def getPenalty(uid:int):
 
 def getLastCallDate(uid:int):
     return __getDataFromOutside__(uid, 'last_call')
-    #str형으로 반환, 내부에서 작업할 때는 %Y-%m-%d %H:%M:%S.%f 형식으로 datetime형으로 변환해야 함
+    #str형으로 반환, 내부에서 작업할 때는 %Y-%m-%d %H:%M:%S.%f%z 형식으로 datetime형으로 변환해야 함
 
 def getRegisterDate(uid:int):
     return __getDataFromOutside__(uid, 'first_call')
@@ -319,7 +319,7 @@ def __updateLastCallDate__(sql_con, sql_cur, uid:int, date:dt, sep=False):
     #In [46]: dt.strptime('2023-05-01 12:34:56.789','%Y-%m-%d %H:%M:%S.%f')
     #Out[46]: datetime.datetime(2023, 5, 1, 12, 34, 56, 789000)
     __logWrite__(uid,'날짜 계산','해당 유저의 날짜계산 요청 접수')
-    last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f%Z')
+    last_call = dt.strptime(__getData__(sql_cur, uid, 'last_call'),'%Y-%m-%d %H:%M:%S.%f%z')
     now = dt.now(tz(td(hours=9)))
     __setData__(sql_con, sql_cur,uid,'last_call',now)
     if now.time() >= time(5,15):
