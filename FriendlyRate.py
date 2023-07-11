@@ -260,7 +260,8 @@ def __setData__(sql_con, sql_cur, uid:int, data_name:str, amount, sep=False):
         __logWrite__(uid,func,f'{data_name} ─→ {amount}')
         __commit__(sql_con)
         if sep:
-            __calcFriendlyRate__(sql_cur,uid)
+            __calcFriendlyRate__(sql_con, sql_cur, uid)
+            __commit__(sql_con)
 
 def __addData__(sql_con, sql_cur, uid:int, data_name:str, amount, sep=False):
     '''
@@ -281,7 +282,8 @@ def __addData__(sql_con, sql_cur, uid:int, data_name:str, amount, sep=False):
             __logWrite__(uid,func,f'{data_name} - {abs(amount)}')
         __commit__(sql_con)
         if sep:
-            __calcFriendlyRate__(sql_cur, uid)
+            __calcFriendlyRate__(sql_con, sql_cur, uid)
+            __commit__(sql_con)
 
 def __getDataFromOutside__(uid:int, attribute:str):
     '''코드가 비슷한 것 같아서 그냥 4개를 전부 합쳐버림'''
