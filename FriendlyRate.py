@@ -427,6 +427,12 @@ if __name__ == '__main__':
         uid = int(input('설정할 유저의 uid를 입력해주세요. : '))
         data_name = input('설정할 attribute를 입력해주세요. : ')
         amount = input('설정할 값을 입력해주세요. : ')
+        if data_name in ['total_penalty','friendly_rate']:
+            amount = float(amount)
+        elif data_name == 'last_call':
+            pass
+        else:
+            amount = int(amount)
         sql_con, sql_cur = __connectDB__()
         __setData__(sql_con, sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
@@ -435,6 +441,12 @@ if __name__ == '__main__':
         uid = int(input('변경할 유저의 uid를 입력해주세요. : '))
         data_name = input('변경할 attribute를 입력해주세요. : ')
         amount = input('얼만큼 변경할 지 값을 입력해주세요. (값을 늘리려면 양수, 값을 줄이려면 음수) : ')
+        if data_name in ['total_penalty','friendly_rate']:
+            amount = float(amount)
+        elif data_name == 'last_call':
+            pass
+        else:
+            amount = int(amount)
         sql_con, sql_cur = __connectDB__()
         __setData__(sql_con, sql_cur, uid, data_name, amount, True)
         __closeCon__(sql_con)
