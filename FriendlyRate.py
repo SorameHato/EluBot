@@ -168,8 +168,9 @@ def register(uid:int):
     sql_cur.execute('SELECT * FROM friendly_rate where uid=:uid;',{'uid':uid})
     sql_data = sql_cur.fetchall()
     if len(sql_data) == 0:
-        sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':dt.now()})
         now = dt.now(tz(td(hours=9)))
+        sql_cur.execute('INSERT INTO friendly_rate(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':now})
+        sql_cur.execute('INSERT INTO hanul_lv(uid, first_call, last_call) VALUES(:uid, :dt, :dt);',{'uid':uid,'dt':now})
         __logWrite__(uid,'등록',f'해당 유저 초기등록 완료')
         __commit__(sql_con,True)
         return 1
