@@ -333,7 +333,7 @@ def __updateLastCallDate__(sql_con, sql_cur, uid:int, date:dt, sep=False):
         #Out[65]: datetime.timedelta(days=-1, seconds=86399)
         __addData__(sql_con, sql_cur, uid, 'day_count', 1)
         restDay = abs((last_call - todayStart).days)
-        __logWrite__(uid,'commandCallCalc',f'오늘 첫 사용, 미접속일 : {restDay}일')
+        __logWrite__(uid,'날짜 계산',f'오늘 첫 사용, 미접속일 : {restDay}일')
         if restDay > 2 and restDay <= 7:
             gunba = __getData__(sql_cur,uid,'gunba')
             if not gunba:
